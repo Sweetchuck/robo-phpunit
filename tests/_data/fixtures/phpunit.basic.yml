@@ -1,0 +1,12 @@
+exitCode: 0
+
+stdOutput: |+
+    logging:
+        coverage-text: 'php://stdout'
+        coverage-html: reports/human/coverage/html
+        coverage-clover: reports/machine/coverage/coverage.xml
+    logging.directories:
+        coverage-html: %workingDirectory%/reports/human/coverage/html
+        coverage-clover: %workingDirectory%/reports/machine/coverage
+
+stdError: ''

@@ -1,0 +1,21 @@
+<phpunit>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log
+            type="coverage-text"
+            target="php://stdout" />
+
+        <log
+            type="coverage-html"
+            target="reports/human/coverage/html" />
+
+        <log
+            type="coverage-clover"
+            target="reports/machine/coverage/coverage.xml" />
+    </logging>
+</phpunit>
