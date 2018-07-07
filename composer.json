@@ -1,6 +1,6 @@
 {
     "name": "sweetchuck/robo-phpunit",
-    "description": "Template to create a new Robo task.",
+    "description": "Robo task to run PHPUnit related commands",
     "license": "GPL-3.0-or-later",
     "config": {
         "bin-dir": "bin",
@@ -10,6 +10,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.1",
+        "ext-pcre": "*",
         "consolidation/robo": "^1.0",
         "danielstjules/stringy": "^3.1"
     },
