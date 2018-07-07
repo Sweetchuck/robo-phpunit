@@ -6,6 +6,7 @@ use Robo\Common\OutputAwareTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\OutputAwareInterface;
 use Sweetchuck\Robo\PHPUnit\Utils;
+use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
 
 /**
@@ -50,6 +51,11 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         'configuration' => 500,
         'testSelection' => 600,
     ];
+
+    /**
+     * @var null|\Closure
+     */
+    protected $processRunCallbackWrapper = null;
 
     protected function initOptions()
     {
@@ -259,7 +265,17 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runInit()
     {
+        $this->runInitProcessRunCallbackWrapper();
         $this->command = $this->getCommand();
+
+        return $this;
+    }
+
+    protected function runInitProcessRunCallbackWrapper()
+    {
+        $this->processRunCallbackWrapper = function (string $type, string $data): void {
+            $this->processRunCallback($type, $data);
+        };
 
         return $this;
     }
@@ -284,18 +300,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runDoIt()
     {
-        $processRunCallbackWrapper = function (string $type, string $data): void {
-            $this->processRunCallback($type, $data);
-        };
-
-        // @todo Check that everything is available.
-        /** @var \Symfony\Component\Process\Process $process */
         $process = $this
-            ->getContainer()
-            ->get('application')
-            ->getHelperSet()
-            ->get('process')
-            ->run($this->output(), $this->command, null, $processRunCallbackWrapper);
+            ->getProcessHelper()
+            ->run($this->output(), $this->command, null, $this->processRunCallbackWrapper);
 
         $this->processExitCode = $process->getExitCode();
         $this->processStdOutput = $process->getOutput();
@@ -315,5 +322,14 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
                 $this->printTaskError($data);
                 break;
         }
+    }
+
+    protected function getProcessHelper(): ProcessHelper
+    {
+        return $this
+            ->getContainer()
+            ->get('application')
+            ->getHelperSet()
+            ->get('process');
     }
 }

@@ -10,6 +10,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.1",
+        "ext-pcre": "*",
         "consolidation/robo": "^1.0",
         "danielstjules/stringy": "^3.1"
     },
