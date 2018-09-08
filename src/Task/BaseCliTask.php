@@ -10,6 +10,8 @@ use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
 
 /**
+ * @method null|int getProcessTimeout()
+ * @method $this    setProcessTimeout(null|int $timeout)
  * @method string getPhpExecutable()
  * @method $this  setPhpExecutable(string $path)
  * @method string getPhpunitExecutable()
@@ -61,6 +63,10 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     {
         parent::initOptions();
         $this->options += [
+            'processTimeout' => [
+                'type' => 'other',
+                'value' => 60,
+            ],
             'phpExecutable' => [
                 'type' => 'other',
                 'value' => 'phpdbg -qrr',
@@ -172,7 +178,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         if ($this->options['phpExecutable']['value']) {
             $this->cmdPattern[] = '%s';
             // @todo Unescaped user input.
-            // But will work with "/foo bar/phpdbg -qrr" also.
+            // But will work with "/foo/bar/phpdbg -qrr" also.
             $this->cmdArgs[] = $this->options['phpExecutable']['value'];
         }
 
@@ -300,9 +306,12 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runDoIt()
     {
+        $processInner = new Process($this->command);
+        $processInner->setTimeout($this->options['processTimeout']['value']);
+
         $process = $this
             ->getProcessHelper()
-            ->run($this->output(), $this->command, null, $this->processRunCallbackWrapper);
+            ->run($this->output(), $processInner, null, $this->processRunCallbackWrapper);
 
         $this->processExitCode = $process->getExitCode();
         $this->processStdOutput = $process->getOutput();
