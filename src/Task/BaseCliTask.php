@@ -6,9 +6,12 @@ use Robo\Common\OutputAwareTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\OutputAwareInterface;
 use Sweetchuck\Robo\PHPUnit\Utils;
+use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
 
 /**
+ * @method null|int getProcessTimeout()
+ * @method $this    setProcessTimeout(null|int $timeout)
  * @method string getPhpExecutable()
  * @method $this  setPhpExecutable(string $path)
  * @method string getPhpunitExecutable()
@@ -51,10 +54,19 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         'testSelection' => 600,
     ];
 
+    /**
+     * @var null|\Closure
+     */
+    protected $processRunCallbackWrapper = null;
+
     protected function initOptions()
     {
         parent::initOptions();
         $this->options += [
+            'processTimeout' => [
+                'type' => 'other',
+                'value' => 60,
+            ],
             'phpExecutable' => [
                 'type' => 'other',
                 'value' => 'phpdbg -qrr',
@@ -166,7 +178,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         if ($this->options['phpExecutable']['value']) {
             $this->cmdPattern[] = '%s';
             // @todo Unescaped user input.
-            // But will work with "/foo bar/phpdbg -qrr" also.
+            // But will work with "/foo/bar/phpdbg -qrr" also.
             $this->cmdArgs[] = $this->options['phpExecutable']['value'];
         }
 
@@ -259,7 +271,17 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runInit()
     {
+        $this->runInitProcessRunCallbackWrapper();
         $this->command = $this->getCommand();
+
+        return $this;
+    }
+
+    protected function runInitProcessRunCallbackWrapper()
+    {
+        $this->processRunCallbackWrapper = function (string $type, string $data): void {
+            $this->processRunCallback($type, $data);
+        };
 
         return $this;
     }
@@ -284,18 +306,12 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runDoIt()
     {
-        $processRunCallbackWrapper = function (string $type, string $data): void {
-            $this->processRunCallback($type, $data);
-        };
+        $processInner = new Process($this->command);
+        $processInner->setTimeout($this->options['processTimeout']['value']);
 
-        // @todo Check that everything is available.
-        /** @var \Symfony\Component\Process\Process $process */
         $process = $this
-            ->getContainer()
-            ->get('application')
-            ->getHelperSet()
-            ->get('process')
-            ->run($this->output(), $this->command, null, $processRunCallbackWrapper);
+            ->getProcessHelper()
+            ->run($this->output(), $processInner, null, $this->processRunCallbackWrapper);
 
         $this->processExitCode = $process->getExitCode();
         $this->processStdOutput = $process->getOutput();
@@ -315,5 +331,14 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
                 $this->printTaskError($data);
                 break;
         }
+    }
+
+    protected function getProcessHelper(): ProcessHelper
+    {
+        return $this
+            ->getContainer()
+            ->get('application')
+            ->getHelperSet()
+            ->get('process');
     }
 }
