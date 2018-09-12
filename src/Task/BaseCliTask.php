@@ -67,6 +67,10 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
                 'type' => 'other',
                 'value' => 60,
             ],
+            'envVars' => [
+                'type' => 'other',
+                'value' => [],
+            ],
             'phpExecutable' => [
                 'type' => 'other',
                 'value' => 'phpdbg -qrr',
@@ -92,6 +96,65 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
                 'value' => [],
             ],
         ];
+
+        return $this;
+    }
+
+    public function getEnvVars(): array
+    {
+        return $this->options['envVars']['value'];
+    }
+
+    /**
+     * @return $this
+     */
+    public function setEnvVars(array $envVars)
+    {
+        $this->options['envVars']['value'] = $envVars;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addEnvVar(string $name, string $value)
+    {
+        $this->options['envVars']['value'][$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addEnvVars(array $envVars)
+    {
+        foreach ($envVars as $name => $value) {
+            $this->addEnvVar($name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function removeEnvVar(string $name)
+    {
+        unset($this->options['envVars']['value'][$name]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function removeEnvVars(array $names)
+    {
+        foreach ($names as $name) {
+            $this->removeEnvVar($name);
+        }
 
         return $this;
     }
@@ -167,6 +230,11 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     protected function getCommandEnvironmentVariables()
     {
+        foreach ($this->options['envVars']['value'] as $name => $value) {
+            $this->cmdPattern[] = "$name=%s";
+            $this->cmdArgs[] = escapeshellarg($value);
+        }
+
         return $this;
     }
 
@@ -201,7 +269,6 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function getCommandPhpunitOptions()
     {
-        //codecept_debug(array_keys($this->options));
         foreach ($this->options as $optionName => $option) {
             $optionCliName = $option['cliName'];
             switch ($option['type']) {

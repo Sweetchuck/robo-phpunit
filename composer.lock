@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "705042b4803b00eeb144f2d4801e95c3",
+    "content-hash": "921049c312ae02a7580688d53ba07feb",
     "packages": [
         {
             "name": "consolidation/annotated-command",
@@ -3039,6 +3039,44 @@
                 "standards"
             ],
             "time": "2017-05-22T02:43:20+00:00"
+        },
+        {
+            "name": "sweetchuck/cli-cmd-builder",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sweetchuck/cli-cmd-builder.git",
+                "reference": "812c2c885f43ed5f342b2a2aac810681e6c68e72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sweetchuck/cli-cmd-builder/zipball/812c2c885f43ed5f342b2a2aac810681e6c68e72",
+                "reference": "812c2c885f43ed5f342b2a2aac810681e6c68e72",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-pcre": "*"
+            },
+            "require-dev": {
+                "codeception/codeception": "^2.4",
+                "consolidation/robo": "^1.3",
+                "squizlabs/php_codesniffer": "^3.3",
+                "sweetchuck/git-hooks": "^0.0.10",
+                "webmozart/path-util": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sweetchuck\\CliCmdBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "description": "Build a CLI commands. Basically string concatenating.",
+            "time": "2018-06-30T16:28:37+00:00"
         },
         {
             "name": "sweetchuck/codeception-module-robo-task-runner",

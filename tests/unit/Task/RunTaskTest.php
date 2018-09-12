@@ -25,6 +25,12 @@ class RunTaskTest extends BaseCliTaskTestBase
         return [
             'All-in-one' => $this->casesGetCommandBuild([
                 [
+                    'expected' => "FOO_BAR='abc'",
+                    'options' => [
+                        'envVars' => ['FOO_BAR' => 'abc'],
+                    ],
+                ],
+                [
                     'expected' => 'my-phpdbg -qrr -b',
                     'options' => [
                         'phpExecutable' => 'my-phpdbg -qrr -b',
@@ -398,5 +404,34 @@ class RunTaskTest extends BaseCliTaskTestBase
                 ],
             ],
         ];
+    }
+
+    public function testGetSetEnvVars(): void
+    {
+        $this->tester->assertSame([], $this->task->getEnvVars());
+
+        $this->task->setEnvVars(['a' => 'b']);
+        $this->tester->assertSame(['a' => 'b'], $this->task->getEnvVars());
+
+        $this->task->addEnvVar('c', 'd');
+        $this->tester->assertSame(['a' => 'b', 'c' => 'd'], $this->task->getEnvVars());
+
+        $this->task->addEnvVars(['e' => 'f', 'g' => 'h']);
+        $this->tester->assertSame(
+            ['a' => 'b', 'c' => 'd', 'e' => 'f', 'g' => 'h'],
+            $this->task->getEnvVars()
+        );
+
+        $this->task->removeEnvVar('e');
+        $this->tester->assertSame(
+            ['a' => 'b', 'c' => 'd', 'g' => 'h'],
+            $this->task->getEnvVars()
+        );
+
+        $this->task->removeEnvVars(['a', 'g']);
+        $this->tester->assertSame(
+            ['c' => 'd'],
+            $this->task->getEnvVars()
+        );
     }
 }
