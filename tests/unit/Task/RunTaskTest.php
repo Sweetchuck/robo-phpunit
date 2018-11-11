@@ -2,7 +2,7 @@
 
 namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 
-use Sweetchuck\Robo\PHPUnit\Task\RunTask;
+use Sweetchuck\CliCmdBuilder\CommandBuilder;
 
 class RunTaskTest extends BaseCliTaskTestBase
 {
@@ -12,7 +12,7 @@ class RunTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = new RunTask();
+        $this->task = $this->taskBuilder->taskPHPUnitRun();
 
         return $this;
     }
@@ -24,6 +24,12 @@ class RunTaskTest extends BaseCliTaskTestBase
     {
         return [
             'All-in-one' => $this->casesGetCommandBuild([
+                [
+                    'expected' => "cd 'a/b' &&",
+                    'options' => [
+                        'workingDirectory' => 'a/b',
+                    ],
+                ],
                 [
                     'expected' => "FOO_BAR='abc'",
                     'options' => [
@@ -37,7 +43,7 @@ class RunTaskTest extends BaseCliTaskTestBase
                     ],
                 ],
                 [
-                    'expected' => 'my-phpunit',
+                    'expected' => "'my-phpunit'",
                     'options' => [
                         'phpunitExecutable' => 'my-phpunit',
                     ],
@@ -369,6 +375,33 @@ class RunTaskTest extends BaseCliTaskTestBase
                     'expected' => "--test-suffix='s,t'",
                     'options' => [
                         'testSuffix' => ['s', 't'],
+                    ],
+                ],
+            ]),
+            'phpExecutable - cmd-builder-01' => $this->casesGetCommandBuild([
+                [
+                    'expected' => "A='b' C='d' my-php -d 'e=f' -d 'g=h' 'vendor/bin/phpunit'",
+                    'options' => [
+                        'phpExecutable' => (new CommandBuilder())
+                            ->addEnvVar('A', 'b')
+                            ->addEnvVar('C', 'd')
+                            ->setExecutable('my-php')
+                            ->addOption('-d', 'e=f')
+                            ->addOption('-d', 'g=h')
+                            ->setOutputType('unchanged'),
+                    ],
+                ],
+            ]),
+            'phpunitExecutable - cmd-builder-01' => $this->casesGetCommandBuild([
+                [
+                    'expected' => "A='b' C='d' my-phpunit",
+                    'options' => [
+                        'phpExecutable' => '',
+                        'phpunitExecutable' => (new CommandBuilder())
+                            ->addEnvVar('A', 'b')
+                            ->addEnvVar('C', 'd')
+                            ->setExecutable('my-phpunit')
+                            ->setOutputType('unchanged'),
                     ],
                 ],
             ]),

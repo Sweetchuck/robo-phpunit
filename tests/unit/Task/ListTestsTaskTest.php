@@ -2,8 +2,6 @@
 
 namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 
-use Sweetchuck\Robo\PHPUnit\Task\ListTestsTask;
-
 class ListTestsTaskTest extends BaseCliTaskTestBase
 {
 
@@ -12,7 +10,7 @@ class ListTestsTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = new ListTestsTask();
+        $this->task = $this->taskBuilder->taskPHPUnitListTestsTask();
 
         return $this;
     }
@@ -24,7 +22,7 @@ class ListTestsTaskTest extends BaseCliTaskTestBase
     {
         return [
             'basic' => [
-                'phpdbg -qrr vendor/bin/phpunit --list-tests',
+                "phpdbg -qrr 'vendor/bin/phpunit' --list-tests",
                 [],
             ],
         ];

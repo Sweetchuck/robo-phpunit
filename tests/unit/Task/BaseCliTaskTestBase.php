@@ -2,14 +2,13 @@
 
 namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 
-use Codeception\Test\Unit;
 use Robo\Application;
 use Robo\Robo;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyProcessHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 
-abstract class BaseCliTaskTestBase extends Unit
+abstract class BaseCliTaskTestBase extends TaskTestBase
 {
     /**
      * @var \Sweetchuck\Robo\PHPUnit\Test\UnitTester
@@ -51,7 +50,7 @@ abstract class BaseCliTaskTestBase extends Unit
     /**
      * @dataProvider casesRunSuccess
      */
-    public function testRunSuccess(array  $expected, array $processProphecy, array $options = []): void
+    public function testRunSuccess(array $expected, array $processProphecy, array $options = []): void
     {
         $instanceIndex = count(DummyProcess::$instances);
         DummyProcess::$prophecy[$instanceIndex] = $processProphecy;

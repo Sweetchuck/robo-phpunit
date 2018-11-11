@@ -5,6 +5,7 @@ namespace Sweetchuck\Robo\PHPUnit\Task;
 use Robo\Common\OutputAwareTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\OutputAwareInterface;
+use Sweetchuck\CliCmdBuilder\CommandBuilder;
 use Sweetchuck\Robo\PHPUnit\Utils;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
@@ -12,8 +13,8 @@ use Symfony\Component\Process\Process;
 /**
  * @method null|int getProcessTimeout()
  * @method $this    setProcessTimeout(null|int $timeout)
- * @method string getPhpExecutable()
- * @method $this  setPhpExecutable(string $path)
+ * @method string|\Sweetchuck\CliCmdBuilder\CommandBuilderInterface getPhpExecutable()
+ * @method $this  setPhpExecutable(string|\Sweetchuck\CliCmdBuilder\CommandBuilderInterface $path)
  * @method string getPhpunitExecutable()
  * @method $this  setPhpunitExecutable(string $path)
  * @method string getConfiguration()
@@ -41,6 +42,11 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      * @var string
      */
     protected $command = '';
+
+    /**
+     * @var null|\Sweetchuck\CliCmdBuilder\CommandBuilder
+     */
+    protected $cmdBuilder = null;
 
     /**
      * @var array
@@ -72,7 +78,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
                 'value' => [],
             ],
             'phpExecutable' => [
-                'type' => 'other',
+                'type' => 'executable',
                 'value' => 'phpdbg -qrr',
             ],
             'phpunitExecutable' => [
@@ -82,7 +88,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
             ],
             'configuration' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['configuration'],
             ],
             'noConfiguration' => [
@@ -186,8 +192,6 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     {
         return $this
             ->getCommandInit()
-            ->getCommandChangeDirectory()
-            ->getCommandPrefix()
             ->getCommandEnvironmentVariables()
             ->getCommandPhpExecutable()
             ->getCommandPhpunitExecutable()
@@ -201,38 +205,15 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function getCommandInit()
     {
-        $this->cmdPattern = [];
-        $this->cmdArgs = [];
+        $this->cmdBuilder = new CommandBuilder();
 
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function getCommandChangeDirectory()
-    {
-        if ($this->options['workingDirectory']['value']) {
-            $this->cmdPattern[] = 'cd %s &&';
-            $this->cmdArgs[] = escapeshellarg($this->options['workingDirectory']['value']);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function getCommandPrefix()
-    {
         return $this;
     }
 
     protected function getCommandEnvironmentVariables()
     {
         foreach ($this->options['envVars']['value'] as $name => $value) {
-            $this->cmdPattern[] = "$name=%s";
-            $this->cmdArgs[] = escapeshellarg($value);
+            $this->cmdBuilder->addEnvVar($name, $value);
         }
 
         return $this;
@@ -244,10 +225,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     protected function getCommandPhpExecutable()
     {
         if ($this->options['phpExecutable']['value']) {
-            $this->cmdPattern[] = '%s';
-            // @todo Unescaped user input.
-            // But will work with "/foo/bar/phpdbg -qrr" also.
-            $this->cmdArgs[] = $this->options['phpExecutable']['value'];
+            $this->cmdBuilder->setExecutable($this->options['phpExecutable']['value']);
         }
 
         return $this;
@@ -258,8 +236,13 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function getCommandPhpunitExecutable()
     {
-        $this->cmdPattern[] = '%s';
-        $this->cmdArgs[] = escapeshellcmd($this->options['phpunitExecutable']['value']);
+        if ($this->options['phpExecutable']['value']) {
+            $this->cmdBuilder->addArgument($this->options['phpunitExecutable']['value']);
+
+            return $this;
+        }
+
+        $this->cmdBuilder->setExecutable($this->options['phpunitExecutable']['value']);
 
         return $this;
     }
@@ -270,54 +253,11 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     protected function getCommandPhpunitOptions()
     {
         foreach ($this->options as $optionName => $option) {
-            $optionCliName = $option['cliName'];
-            switch ($option['type']) {
-                case 'option:flag':
-                    if ($option['value']) {
-                        $this->cmdPattern[] = "--$optionCliName";
-                    }
-                    break;
-
-                case 'option:tri-state':
-                    if ($option['value'] !== null) {
-                        $this->cmdPattern[] = $option['value'] ? "--$optionCliName" : "--no-$optionCliName";
-                    }
-                    break;
-
-                case 'option:value':
-                    // @todo Handle empty strings or "0".
-                    if ($option['value']) {
-                        $this->cmdPattern[] = "--$optionCliName=%s";
-                        $this->cmdArgs[] = escapeshellarg($option['value']);
-                    }
-                    break;
-
-                case 'option:value:list':
-                    $values = Utils::filterEnabled($option['value']);
-                    if ($values) {
-                        $separator = $option['separator'] ?? ',';
-                        $this->cmdPattern[] = "--$optionCliName=%s";
-                        $this->cmdArgs[] = escapeshellarg(implode($separator, $values));
-                    }
-                    break;
-
-                case 'option:value:multi':
-                    $values = Utils::filterEnabled($option['value']);
-                    if ($values) {
-                        $this->cmdPattern[] = str_repeat("--$optionCliName=%s", count($values));
-                        foreach ($values as $value) {
-                            $this->cmdArgs[] = escapeshellarg($value);
-                        }
-                    }
-                    break;
-
-                case 'argument:multi':
-                    foreach (Utils::filterEnabled($option['value']) as $value) {
-                        $this->cmdPattern[] = '%s';
-                        $this->cmdArgs[] = escapeshellarg($value);
-                    }
-                    break;
+            if (mb_strpos($option['type'], 'option:') !== 0) {
+                continue;
             }
+
+            $this->cmdBuilder->addOption($option['cliName'], $option['value'] ?? null, $option['type']);
         }
 
         return $this;
@@ -325,12 +265,24 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     protected function getCommandPhpunitArguments()
     {
+        foreach (array_keys($this->options['arguments']['value'], true, true) as $argument) {
+            $this->cmdBuilder->addArgument($argument, 'argument:single:unsafe');
+        }
+
         return $this;
     }
 
     protected function getCommandBuild(): string
     {
-        return vsprintf(implode(' ', $this->cmdPattern), $this->cmdArgs);
+        $chdir = '';
+        if ($this->options['workingDirectory']['value']) {
+            $chdir = sprintf(
+                'cd %s && ',
+                escapeshellarg($this->options['workingDirectory']['value'])
+            );
+        }
+
+        return $chdir . (string) $this->cmdBuilder;
     }
 
     /**

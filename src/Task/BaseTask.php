@@ -8,9 +8,9 @@ use Robo\Result;
 use Robo\Task\BaseTask as RoboBaseTask;
 use Robo\TaskInfo;
 use Stringy\StaticStringy;
-use Sweetchuck\Robo\PHPUnit\Comparer\ArrayComparer;
 use Sweetchuck\Robo\PHPUnit\OutputParser\PhpdbgOutputParser;
 use Sweetchuck\Robo\PHPUnit\OutputParserInterface;
+use Sweetchuck\Utils\Comparer\ArrayValueComparer;
 
 /**
  * @method string getAssetNamePrefix()
@@ -106,7 +106,7 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
                 $this->options[$optionName]['cliName'] = StaticStringy::dasherize($optionName);
             }
         }
-        uasort($this->options, new ArrayComparer([
+        uasort($this->options, new ArrayValueComparer([
             'weight' => 500,
             'name' => '',
         ]));
@@ -265,7 +265,7 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
             $this->processStdError
         );
 
-        // @todo Cut off the phpdbg error messages from the beginning of the stdOutput.
+        // @todo Cut the phpdbg error messages off from the beginning of the stdOutput.
         $outputParser = $this->getOutputParser();
         if ($outputParser) {
             // @todo ExitCode control.

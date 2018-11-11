@@ -2,8 +2,6 @@
 
 namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 
-use Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask;
-
 class ListGroupsTaskTest extends BaseCliTaskTestBase
 {
     /**
@@ -11,7 +9,7 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = new ListGroupsTask();
+        $this->task = $this->taskBuilder->taskPHPUnitListGroupsTask();
 
         return $this;
     }
@@ -23,11 +21,11 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
     {
         return [
             'basic' => [
-                'phpdbg -qrr vendor/bin/phpunit --list-groups',
+                "phpdbg -qrr 'vendor/bin/phpunit' --list-groups",
                 [],
             ],
             'arguments vector' => [
-                "phpdbg -qrr vendor/bin/phpunit --list-groups 'my-dir'",
+                "phpdbg -qrr 'vendor/bin/phpunit' --list-groups 'my-dir'",
                 [
                     'arguments' => ['my-dir'],
                 ],
