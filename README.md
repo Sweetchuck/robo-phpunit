@@ -1,19 +1,17 @@
 # Robo task to run PHPUnit related tasks
 
-[![Build Status](https://travis-ci.org/Sweetchuck/robo-phpunit.svg?branch=master)](https://travis-ci.org/Sweetchuck/robo-phpunit)
+[![CircleCI](https://circleci.com/gh/Sweetchuck/robo-phpunit.svg?style=svg)](https://circleci.com/gh/Sweetchuck/robo-phpunit)
 [![codecov](https://codecov.io/gh/Sweetchuck/robo-phpunit/branch/master/graph/badge.svg)](https://codecov.io/gh/Sweetchuck/robo-phpunit)
 
 @todo
 
 
-Install
--------
+## Install
 
 `composer require --dev sweetchuck/robo-phpunit`
 
 
-Usage
------
+## Usage
 
 ```php
 <?php

@@ -68,17 +68,16 @@ class PHPUnitXmlParser
             $this->phpunit['logging'][$type] = $target;
 
             $urlScheme = parse_url($target, PHP_URL_SCHEME) ?: 'file';
-            if ($urlScheme === 'file') {
-                $directory = in_array($type, $fileLoggingTypes) ?
-                    Path::getDirectory($target)
-                    : $target;
-
-                if (Path::isRelative($directory)) {
-                    $directory = Path::join($this->baseDir, $directory);
-                }
-
-                $this->phpunit['logging.directories'][$type] = $directory;
+            if ($urlScheme !== 'file') {
+                continue;
             }
+
+            $directory = in_array($type, $fileLoggingTypes) ? Path::getDirectory($target) : $target;
+            if (Path::isRelative($directory)) {
+                $directory = Path::join($this->baseDir, $directory);
+            }
+
+            $this->phpunit['logging.directories'][$type] = $directory;
         }
 
         return $this;

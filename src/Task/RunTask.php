@@ -139,37 +139,37 @@ class RunTask extends BaseCliTask
         $this->options += [
             'coverageClover' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'coverageCrap4j' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'coverageHtml' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'coveragePhp' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'coverageText' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'coverageXml' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverage'] + $w++,
             ],
             'whitelist' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['coverageOther'] + $w++,
             ],
             'disableCoverageIgnore' => [
@@ -180,28 +180,28 @@ class RunTask extends BaseCliTask
             'logJUnit' => [
                 'cliName' => 'log-junit',
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['logging'] + $w++,
             ],
             'logTeamCity' => [
                 'cliName' => 'log-teamcity',
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['logging'] + $w++,
             ],
             'testdoxHtml' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['logging'] + $w++,
             ],
             'testdoxText' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['logging'] + $w++,
             ],
             'testdoxXml' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['logging'] + $w++,
             ],
             'reverseList' => [
@@ -288,12 +288,12 @@ class RunTask extends BaseCliTask
             ],
             'colors' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['testExecution'] + $w++,
             ],
             'columns' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['testExecution'] + $w++,
             ],
             'stderr' => [
@@ -353,12 +353,12 @@ class RunTask extends BaseCliTask
             ],
             'loader' => [
                 'type' => 'option:value',
-                'value' => false,
+                'value' => null,
                 'weight' => $this->optionGroupWeights['testExecution'] + $w++,
             ],
             'repeat' => [
                 'type' => 'option:value',
-                'value' => false,
+                'value' => null,
                 'weight' => $this->optionGroupWeights['testExecution'] + $w++,
             ],
             'teamCity' => [
@@ -384,12 +384,12 @@ class RunTask extends BaseCliTask
             ],
             'printer' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['testExecution'] + $w++,
             ],
             'bootstrap' => [
                 'type' => 'option:value',
-                'value' => '',
+                'value' => null,
                 'weight' => $this->optionGroupWeights['configuration'] + $w++,
             ],
             'noCoverage' => [
