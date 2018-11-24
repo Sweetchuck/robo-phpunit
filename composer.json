@@ -2,12 +2,13 @@
     "name": "sweetchuck/robo-phpunit",
     "description": "Robo task to run PHPUnit related commands",
     "license": "GPL-3.0-or-later",
-    "config": {
-        "bin-dir": "bin",
-        "sort-packages": true
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
     "require": {
         "php": ">=7.1",
         "ext-dom": "*",
@@ -50,11 +51,5 @@
         "post-update-cmd": [
             "\\Sweetchuck\\Robo\\PHPUnit\\Composer\\Scripts::postUpdateCmd"
         ]
-    },
-    "repositories": {
-        "packagist.org": {
-            "type": "composer",
-            "url": "https://repo-eu-uk-1.packagist.org"
-        }
     }
 }
