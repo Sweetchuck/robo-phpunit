@@ -3,7 +3,7 @@
     "description": "Robo task to run PHPUnit related commands",
     "keywords": [
         "robo-tasks",
-        "composer"
+        "phpunit"
     ],
     "license": "GPL-2.0-or-later",
     "authors": [
