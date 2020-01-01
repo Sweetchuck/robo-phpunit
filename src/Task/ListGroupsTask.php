@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
 use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;

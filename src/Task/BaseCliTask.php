@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
 use Robo\Common\OutputAwareTrait;
 use Robo\Contract\CommandInterface;
 use Robo\Contract\OutputAwareInterface;
 use Sweetchuck\CliCmdBuilder\CommandBuilder;
-use Sweetchuck\Robo\PHPUnit\Utils;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
 
@@ -27,16 +28,6 @@ use Symfony\Component\Process\Process;
 abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputAwareInterface
 {
     use OutputAwareTrait;
-
-    /**
-     * @var array
-     */
-    protected $cmdPattern = [];
-
-    /**
-     * @var array
-     */
-    protected $cmdArgs = [];
 
     /**
      * @var string
@@ -325,7 +316,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
      */
     protected function runDoIt()
     {
-        $processInner = new Process($this->command);
+        $processInner = Process::fromShellCommandline($this->command);
         $processInner->setTimeout($this->options['processTimeout']['value']);
 
         $process = $this
