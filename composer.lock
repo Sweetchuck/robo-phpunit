@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd0d274d8106ea0d18151017b807e69f",
+    "content-hash": "69847a1ecbd1ba1eabcb284586b4f3bc",
     "packages": [
         {
             "name": "consolidation/annotated-command",
@@ -857,7 +857,7 @@
         },
         {
             "name": "sweetchuck/utils",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/utils.git",
@@ -3970,9 +3970,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "sweetchuck/utils": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
