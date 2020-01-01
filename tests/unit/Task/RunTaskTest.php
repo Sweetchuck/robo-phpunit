@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 
 use Sweetchuck\CliCmdBuilder\CommandBuilder;

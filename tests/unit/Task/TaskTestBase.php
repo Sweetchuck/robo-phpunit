@@ -7,13 +7,16 @@ namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
 use Codeception\Test\Unit;
 use League\Container\Container as LeagueContainer;
 use Robo\Collection\CollectionBuilder;
+use Robo\Config\Config;
 use Robo\Robo;
+use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
+use Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyProcessHelper;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyTaskBuilder;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyOutput;
-use Symfony\Component\Debug\BufferingLogger;
+use Symfony\Component\ErrorHandler\BufferingLogger;
 
-class TaskTestBase extends Unit
+abstract class TaskTestBase extends Unit
 {
     /**
      * @var \League\Container\ContainerInterface
@@ -31,21 +34,34 @@ class TaskTestBase extends Unit
     protected $builder;
 
     /**
+     * @var \Sweetchuck\Robo\PHPUnit\Test\UnitTester
+     */
+    protected $tester;
+
+    /**
+     * @var \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
+     */
+    protected $task;
+
+    /**
      * @var \Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyTaskBuilder
      */
     protected $taskBuilder;
 
-    // @codingStandardsIgnoreStart
+    /**
+     * @inheritdoc
+     */
     public function _before()
     {
-        // @codingStandardsIgnoreEnd
         parent::_before();
 
         Robo::unsetContainer();
+        DummyProcess::reset();
 
         $this->container = new LeagueContainer();
         $application = new SymfonyApplication('Sweetchuck - Robo PHPUnit', '1.0.0');
-        $this->config = (new \Robo\Config\Config());
+        $application->getHelperSet()->set(new DummyProcessHelper(), 'process');
+        $this->config = new Config();
         $input = null;
         $output = new DummyOutput([
             'verbosity' => DummyOutput::VERBOSITY_DEBUG,
@@ -60,5 +76,12 @@ class TaskTestBase extends Unit
         $this->taskBuilder = new DummyTaskBuilder();
         $this->taskBuilder->setContainer($this->container);
         $this->taskBuilder->setBuilder($this->builder);
+
+        $this->initTask();
     }
+
+    /**
+     * @return $this
+     */
+    abstract protected function initTask();
 }
