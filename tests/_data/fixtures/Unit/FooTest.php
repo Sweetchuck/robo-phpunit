@@ -1,6 +1,6 @@
 <?php
 
-namespace Sweetchuck\Robo\PHPUnit\TestsFixtures;
+namespace Sweetchuck\Robo\PHPUnit\TestsFixtures\Unit;
 
 use PHPUnit\Framework\TestCase;
 

@@ -1,5 +1,7 @@
 <?php
 
+use Robo\Common\ConfigAwareTrait;
+use Robo\Contract\ConfigAwareInterface;
 use Robo\Tasks;
 use Sweetchuck\LintReport\Reporter\BaseReporter;
 use League\Container\ContainerInterface;
@@ -13,10 +15,11 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 use Webmozart\PathUtil\Path;
 
-class RoboFile extends Tasks
+class RoboFile extends Tasks implements ConfigAwareInterface
 {
     use GitTaskLoader;
     use PhpcsTaskLoader;
+    use ConfigAwareTrait;
 
     /**
      * @var array
@@ -70,12 +73,20 @@ class RoboFile extends Tasks
     protected $environmentName = '';
 
     /**
+     * Example: /bin/bash.
+     *
+     * @var string
+     */
+    protected $shell;
+
+    /**
      * RoboFile constructor.
      */
     public function __construct()
     {
         putenv('COMPOSER_DISABLE_XDEBUG_WARN=1');
         $this
+            ->initShell()
             ->initComposerInfo()
             ->initEnvVarNamePrefix()
             ->initEnvironmentTypeAndName();
@@ -100,7 +111,7 @@ class RoboFile extends Tasks
 
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskComposerValidate())
+            ->addTask($this->getTaskComposerValidate())
             ->addTask($this->getTaskPhpcsLint())
             ->addTask($this->getTaskCodeceptRunSuites());
     }
@@ -122,7 +133,7 @@ class RoboFile extends Tasks
     {
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskComposerValidate())
+            ->addTask($this->getTaskComposerValidate())
             ->addTask($this->getTaskPhpcsLint());
     }
 
@@ -197,6 +208,13 @@ class RoboFile extends Tasks
         return getenv($this->getEnvVarName('phpdbg_executable')) ?: Path::join(PHP_BINDIR, 'phpdbg');
     }
 
+    protected function initShell()
+    {
+        $this->shell = getenv('SHELL');
+
+        return $this;
+    }
+
     /**
      * @return $this
      */
@@ -207,13 +225,23 @@ class RoboFile extends Tasks
         }
 
         $this->composerInfo = json_decode(file_get_contents('composer.json'), true);
-        list($this->packageVendor, $this->packageName) = explode('/', $this->composerInfo['name']);
+        [$this->packageVendor, $this->packageName] = explode('/', $this->composerInfo['name']);
 
         if (!empty($this->composerInfo['config']['bin-dir'])) {
             $this->binDir = $this->composerInfo['config']['bin-dir'];
         }
 
         return $this;
+    }
+
+    /**
+     * @return \Robo\Collection\CollectionBuilder|\Robo\Task\Composer\Validate
+     */
+    protected function getTaskComposerValidate()
+    {
+        $composerExecutable = $this->getConfig()->get('composerExecutable');
+
+        return $this->taskComposerValidate($composerExecutable);
     }
 
     /**
@@ -352,7 +380,13 @@ class RoboFile extends Tasks
                         '{command}' => $command,
                     ]
                 ));
-                $process = new Process($command, null, null, null, null);
+                $process = new Process(
+                    [$this->shell, '-c', $command],
+                    null,
+                    null,
+                    null,
+                    null
+                );
                 $exitCode = $process->run(function ($type, $data) {
                     switch ($type) {
                         case Process::OUT:
@@ -413,7 +447,7 @@ class RoboFile extends Tasks
     {
         $command = sprintf('%s -m', escapeshellcmd($this->getPhpExecutable()));
 
-        $process = new Process($command);
+        $process = new Process([$this->shell, '-c', $command]);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
             throw new \RuntimeException('@todo');
@@ -426,7 +460,7 @@ class RoboFile extends Tasks
     {
         $command = sprintf('%s -qrr', escapeshellcmd($this->getPhpdbgExecutable()));
 
-        return (new Process($command))->run() === 0;
+        return (new Process([$this->shell, '-c', $command]))->run() === 0;
     }
 
     protected function getLogDir(): string
@@ -448,11 +482,15 @@ class RoboFile extends Tasks
                 ->in($this->codeceptionInfo['paths']['tests'])
                 ->files()
                 ->name('*.suite.yml')
+                ->name('*.suite.dist.yml')
                 ->depth(0);
 
             foreach ($suiteFiles as $suiteFile) {
-                $this->codeceptionSuiteNames[] = $suiteFile->getBasename('.suite.yml');
+                $parts = explode('.', $suiteFile->getBasename());
+                $this->codeceptionSuiteNames[] = reset($parts);
             }
+
+            $this->codeceptionSuiteNames = array_unique($this->codeceptionSuiteNames);
         }
 
         return $this->codeceptionSuiteNames;

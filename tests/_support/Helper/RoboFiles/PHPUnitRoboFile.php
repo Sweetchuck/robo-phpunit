@@ -113,8 +113,11 @@ class PHPUnitRoboFile extends Tasks
                 unset($assets['time']);
 
                 $this
-                    ->output()
+                    ->getContainer()
+                    ->get('output')
                     ->writeln(Yaml::dump($assets, 99));
+
+                return 0;
             });
     }
 
