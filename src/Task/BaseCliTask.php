@@ -319,7 +319,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         // @todo Remove this once drupal/core uses symfony/process:^4.
         $processInner =  is_callable([Process::class, 'fromShellCommandline']) ?
             Process::fromShellCommandline($this->command)
-            : new Process($this->command);
+            : new Process(['bash', '-c', $this->command]);
 
         $processInner->setTimeout($this->options['processTimeout']['value']);
 

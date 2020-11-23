@@ -61,8 +61,8 @@ class ParseXmlTaskCest
         $stdOutput = $tester->getRoboTaskStdOutput($example['id']);
         $stdError = $tester->getRoboTaskStdError($example['id']);
 
-        $tester->assertEquals($example['expected']['exitCode'], $exitCode);
-        $tester->assertEquals($example['expected']['stdOutput'], $stdOutput);
-        $tester->assertEquals($example['expected']['stdError'], $stdError);
+        $tester->assertSame($example['expected']['exitCode'], $exitCode);
+        $tester->assertSame($example['expected']['stdOutput'], $stdOutput);
+        $tester->assertSame($example['expected']['stdError'], $stdError);
     }
 }
