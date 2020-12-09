@@ -4755,12 +4755,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/git-hooks.git",
-                "reference": "b54cdb484b3408cb6bb8de374ba7ed39286525b4"
+                "reference": "2f03af3510fc8d8305e20f4fc5415e7ff6a6048b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/git-hooks/zipball/b54cdb484b3408cb6bb8de374ba7ed39286525b4",
-                "reference": "b54cdb484b3408cb6bb8de374ba7ed39286525b4",
+                "url": "https://api.github.com/repos/Sweetchuck/git-hooks/zipball/2f03af3510fc8d8305e20f4fc5415e7ff6a6048b",
+                "reference": "2f03af3510fc8d8305e20f4fc5415e7ff6a6048b",
                 "shasum": ""
             },
             "require": {
@@ -4779,6 +4779,7 @@
                 "sweetchuck/robo-git": "^0.3",
                 "sweetchuck/robo-phpcs": "^0.2"
             },
+            "default-branch": true,
             "type": "composer-plugin",
             "extra": {
                 "class": "\\Sweetchuck\\GitHooks\\Composer\\Plugin",
@@ -4800,7 +4801,7 @@
                 "issues": "https://github.com/Sweetchuck/git-hooks/issues",
                 "source": "https://github.com/Sweetchuck/git-hooks/tree/2.x"
             },
-            "time": "2020-10-25T15:42:29+00:00"
+            "time": "2020-12-09T21:30:27+00:00"
         },
         {
             "name": "sweetchuck/lint-report",
