@@ -19,6 +19,14 @@ class PHPUnitRoboFile extends Tasks
     protected $composerBinDir = 'bin';
 
     /**
+     * {@inheritdoc}
+     */
+    protected function output()
+    {
+        return $this->getContainer()->get('output');
+    }
+
+    /**
      * @command phpunit:list:groups
      */
     public function listGroups(array $args)
