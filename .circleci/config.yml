@@ -13,9 +13,20 @@ version: 2.1
     COMPOSER_DISABLE_XDEBUG_WARN: '1'
 
 orbs:
-    codecov: codecov/codecov@1.0.5
+    codecov: 'codecov/codecov@1.2.4'
 
 executors:
+    php800:
+        environment:
+            <<: *env_common
+            <<: *env_xdebug
+            <<: *env_composer
+
+        docker:
+            -
+                name: 'main'
+                image: 'circleci/php:8.0'
+
     php704:
         environment:
             <<: *env_common
@@ -27,17 +38,6 @@ executors:
                 name: 'main'
                 image: 'circleci/php:7.4'
 
-    php703:
-        environment:
-            <<: *env_common
-            <<: *env_xdebug
-            <<: *env_composer
-
-        docker:
-            -
-                name: 'main'
-                image: 'circleci/php:7.3'
-
 commands:
     composer_install:
         description: 'Install Composer dependencies with cache restore and save'
@@ -46,22 +46,21 @@ commands:
                 restore_cache:
                     name: 'Composer - cache restore'
                     keys:
-                        - 'composer-{{ checksum "./composer.lock" }}-1'
+                        - 'composer-{{ checksum "./composer.lock" }}-2'
 
             -
                 run:
                     name: 'Composer - install'
                     command: >
-                        [[ -d "$(composer config vendor-dir)" ]] || composer install --no-progress
+                        composer install --no-progress
 
             -
                 save_cache:
                     name: 'Composer - cache save'
-                    key: 'composer-{{ checksum "./composer.lock" }}-1'
+                    key: 'composer-{{ checksum "./composer.lock" }}-2'
                     paths:
-                        - './bin/'
-                        - './vendor/'
                         - '~/.composer/cache/'
+                        - '~/.cache/composer/'
 
 
     lint:
@@ -98,27 +97,27 @@ commands:
 
 jobs:
     build:
-        executor: 'php703'
-        working_directory: '~/repo'
-        steps:
-            - 'checkout'
-            - 'composer_install'
-    lint:
-        executor: 'php703'
-        working_directory: '~/repo'
-        steps:
-            - 'checkout'
-            - 'composer_install'
-            - 'lint'
-    test_php704:
         executor: 'php704'
         working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
+    lint:
+        executor: 'php704'
+        working_directory: '~/repo'
+        steps:
+            - 'checkout'
+            - 'composer_install'
+            - 'lint'
+    test_php800:
+        executor: 'php800'
+        working_directory: '~/repo'
+        steps:
+            - 'checkout'
+            - 'composer_install'
             - 'test'
-    test_php703:
-        executor: 'php703'
+    test_php704:
+        executor: 'php704'
         working_directory: '~/repo'
         steps:
             - 'checkout'
@@ -135,10 +134,10 @@ workflows:
                     requires:
                         - build
             -
-                test_php704:
+                test_php800:
                     requires:
                         - build
             -
-                test_php703:
+                test_php704:
                     requires:
                         - build

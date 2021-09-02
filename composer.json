@@ -26,7 +26,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "ext-dom": "*",
         "ext-pcre": "*",
         "consolidation/robo": "^2.0",
@@ -36,10 +36,10 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "codeception/codeception": "^4.0",
+        "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.1",
         "squizlabs/php_codesniffer": "^3.5",
-        "sweetchuck/codeception-module-robo-task-runner": "dev-master",
+        "sweetchuck/codeception-module-robo-task-runner": "1.x-dev",
         "sweetchuck/git-hooks": "^2.x-dev",
         "sweetchuck/robo-git": "1.x-dev",
         "sweetchuck/robo-phpcs": "1.x-dev",

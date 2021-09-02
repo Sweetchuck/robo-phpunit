@@ -40,7 +40,7 @@ class RoboFile extends \Robo\Tasks
 }
 ```
 
-Run `vendor/bin/robo phpunit:`  
+Run `vendor/bin/robo phpunit:list-groups`  
 Example output:
 > <pre>foo
 > bar</pre>
