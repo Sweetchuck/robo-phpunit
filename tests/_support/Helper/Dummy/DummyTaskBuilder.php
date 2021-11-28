@@ -21,11 +21,17 @@ class DummyTaskBuilder implements BuilderAwareInterface, ContainerAwareInterface
     use TaskIO;
 
     use PHPUnitTaskLoader {
+        taskPHPUnitCoverageReportHtmlTask as public;
+        taskPHPUnitCoverageReportXmlTask as public;
         taskPHPUnitListGroupsTask as public;
         taskPHPUnitListSuitesTask as public;
         taskPHPUnitListTestsTask as public;
-        taskPHPUnitParseXml as public;
+        taskPHPUnitListTestsXmlTask as public;
+        taskPHPUnitMergeCoveragePhpTask as public;
+        taskPHPUnitParseConfigurationXml as public;
         taskPHPUnitRun as public;
+        taskPHPUnitTestCasesToCsv as public;
+        taskPHPUnitTestCasesToFileNames as public;
     }
 
     public function collectionBuilder(): CollectionBuilder

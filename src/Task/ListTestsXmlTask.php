@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
-use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
+use Sweetchuck\Robo\PHPUnit\OutputParser\ListTestsXmlOutputParser;
 
 /**
  * @method array  getTestsuite()
@@ -22,14 +22,14 @@ use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
  * @method string getTestSuffix()
  * @method $this  setTestSuffix(array $names)
  */
-class ListTestsTask extends BaseCliTask
+class ListTestsXmlTask extends BaseCliTask
 {
-    protected string $taskName = 'PHPUnit - List tests';
+    protected string $taskName = 'PHPUnit - List tests XML';
 
-    protected string $outputParserClass = ListOutputParser::class;
+    protected string $outputParserClass = ListTestsXmlOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
-        'items' => 'phpunit.testMethods',
+        'xml' => 'phpunit.tests.xml',
     ];
 
     /**
@@ -39,9 +39,9 @@ class ListTestsTask extends BaseCliTask
     {
         parent::initOptions();
         $this->options += [
-            'listTests' => [
-                'type' => 'option:flag',
-                'value' => true,
+            'listTestsXml' => [
+                'type' => 'option:value',
+                'value' => 'php://stdout',
             ],
         ];
         $this->options += $this->initOptionsTestSelection();
@@ -52,7 +52,7 @@ class ListTestsTask extends BaseCliTask
     protected function runInitAssets()
     {
         parent::runInitAssets();
-        $this->assets['phpunit.testMethods'] = null;
+        $this->assets['phpunit.tests.xml'] = null;
 
         return $this;
     }

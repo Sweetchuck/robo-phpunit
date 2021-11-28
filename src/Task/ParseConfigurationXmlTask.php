@@ -4,32 +4,23 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
-use Psr\Http\Message\StreamInterface;
-use Sweetchuck\Robo\PHPUnit\PHPUnitXmlParser;
+use Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser;
+use Sweetchuck\Robo\PHPUnit\Utils;
 use Webmozart\PathUtil\Path;
 
-class ParseXmlTask extends BaseTask
+class ParseConfigurationXmlTask extends BaseTask
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $taskName = 'PHPUnit - Parse XML';
+    protected string $taskName = 'PHPUnit - Parse configuration XML';
+
+    protected string $phpunitXmlParserClass = PHPUnitConfigurationXmlParser::class;
 
     /**
-     * @var string
-     */
-    protected $phpunitXmlParserClass = PHPUnitXmlParser::class;
-
-    // region Options
-
-    // region xmlFile
-    /**
-     * @var null|string|resource|\Psr\Http\Message\StreamInterface
+     * @var null|string|resource
      */
     protected $xmlFile = null;
 
     /**
-     * @return null|string|resource|\Psr\Http\Message\StreamInterface
+     * @return null|string|resource
      */
     public function getXmlFile()
     {
@@ -37,7 +28,8 @@ class ParseXmlTask extends BaseTask
     }
 
     /**
-     * @param string|resource|\Psr\Http\Message\StreamInterface $value
+     * @param string|resource $value
+     *   XML content, file name, stream resource.
      *
      * @return $this
      */
@@ -47,9 +39,22 @@ class ParseXmlTask extends BaseTask
 
         return $this;
     }
-    // endregion
 
-    // endregion
+    /**
+     * {@inheritdoc}
+     */
+    protected function initOptions()
+    {
+        parent::initOptions();
+        $this->options += [
+            'xmlFile' => [
+                'type' => 'other',
+                'value' => 'phpunit.xml.dist',
+            ],
+        ];
+
+        return $this;
+    }
 
     protected function runDoIt()
     {
@@ -68,9 +73,12 @@ class ParseXmlTask extends BaseTask
             return $this;
         }
 
-        /** @var \Sweetchuck\Robo\PHPUnit\PHPUnitXmlParser $phpunitXmlParser */
-        $phpunitXmlParser = new $this->phpunitXmlParserClass();
-        $this->assets = $phpunitXmlParser->parse($xmlString, $this->getWorkingDirectory());
+        /** @var \Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser $configurationXmlParser */
+        $configurationXmlParser = new $this->phpunitXmlParserClass();
+        $assets = $configurationXmlParser->parse($xmlString, $this->getWorkingDirectory());
+        foreach ($assets as $key => $value) {
+            $this->assets["phpunit.$key"] = $value;
+        }
 
         return $this;
     }
@@ -87,46 +95,15 @@ class ParseXmlTask extends BaseTask
     protected function getXmlString(): ?string
     {
         $xmlFile = $this->getXmlFile();
-        if ($xmlFile instanceof StreamInterface) {
-            return $this->getXmlStringFromStream($xmlFile);
-        }
-
         if (is_resource($xmlFile)) {
-            return $this->getXmlStringFromResource($xmlFile);
+            return Utils::getXmlStringFromResource($xmlFile);
         }
 
         $xmlFile = (string) $xmlFile;
 
-        return $this->isXmlString($xmlFile) ?
+        return Utils::isXmlString($xmlFile, 'phpunit') ?
             $xmlFile
             : $this->getXmlStringFromFile($xmlFile);
-    }
-
-    protected function getXmlStringFromStream(StreamInterface $stream): string
-    {
-        $currentPosition = $stream->tell();
-        $stream->rewind();
-        $content = $stream->getContents();
-        $stream->seek($currentPosition);
-
-        return $content;
-    }
-
-    /**
-     * @param resource $resource
-     */
-    protected function getXmlStringFromResource($resource): ?string
-    {
-        if (get_resource_type($resource) !== 'stream') {
-            return null;
-        }
-
-        $currentPosition = ftell($resource);
-        rewind($resource);
-        $content = stream_get_contents($resource);
-        fseek($resource, $currentPosition);
-
-        return $content !== false ? $content : null;
     }
 
     protected function getXmlStringFromFile(string $fileName): ?string
@@ -157,10 +134,5 @@ class ParseXmlTask extends BaseTask
         }
 
         return null;
-    }
-
-    protected function isXmlString(string $content): bool
-    {
-        return mb_strpos($content, '<?xml') === 0 || mb_strpos($content, '<phpunit') === 0;
     }
 }

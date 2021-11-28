@@ -25,55 +25,25 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var string
-     */
-    protected $taskName = 'PHPUnit';
+    protected string $taskName = 'PHPUnit';
 
-    /**
-     * @var array
-     */
-    protected $assets = [];
+    protected array $assets = [];
 
-    /**
-     * @var int
-     */
-    protected $processExitCode = 0;
+    protected int $processExitCode = 0;
 
-    /**
-     * @var string
-     */
-    protected $processStdOutput = '';
+    protected string $processStdOutput = '';
 
-    /**
-     * @var string
-     */
-    protected $processStdError = '';
+    protected string $processStdError = '';
 
-    /**
-     * @var array
-     */
-    protected $phpdbgOutputParserResult = [];
+    protected array $phpdbgOutputParserResult = [];
 
-    /**
-     * @var \Sweetchuck\Robo\PHPUnit\OutputParserInterface
-     */
-    protected $outputParser;
+    protected ?OutputParserInterface $outputParser = null;
 
-    /**
-     * @var string
-     */
-    protected $outputParserClass = '';
+    protected string $outputParserClass = '';
 
-    /**
-     * @var array
-     */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @var array
-     */
-    protected $outputParserAssetNameMapping = [];
+    protected array $outputParserAssetNameMapping = [];
 
     public function __construct()
     {
@@ -243,6 +213,8 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
      */
     protected function runHeader()
     {
+        $this->printTaskInfo('is working');
+
         return $this;
     }
 

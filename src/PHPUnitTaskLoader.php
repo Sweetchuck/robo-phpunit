@@ -6,10 +6,35 @@ namespace Sweetchuck\Robo\PHPUnit;
 
 use League\Container\ContainerAwareInterface;
 use Robo\Collection\CollectionBuilder;
-use Robo\Contract\OutputAwareInterface;
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 
 trait PHPUnitTaskLoader
 {
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\CoverageReportHtmlTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitCoverageReportHtmlTask(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\CoverageReportHtmlTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\CoverageReportHtmlTask::class);
+        $task->setOptions($options);
+
+        return $task;
+    }
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\CoverageReportXmlTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitCoverageReportXmlTask(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\CoverageReportXmlTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\CoverageReportXmlTask::class);
+        $task->setOptions($options);
+
+        return $task;
+    }
+
     /**
      * @return \Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask|\Robo\Collection\CollectionBuilder
      */
@@ -59,12 +84,40 @@ trait PHPUnitTaskLoader
     }
 
     /**
-     * @return \Sweetchuck\Robo\PHPUnit\Task\ParseXmlTask|\Robo\Collection\CollectionBuilder
+     * @return \Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask|\Robo\Collection\CollectionBuilder
      */
-    protected function taskPHPUnitParseXml(array $options = []): CollectionBuilder
+    protected function taskPHPUnitListTestsXmlTask(array $options = []): CollectionBuilder
     {
-        /** @var \Sweetchuck\Robo\PHPUnit\Task\ParseXmlTask|\Robo\Collection\CollectionBuilder $task */
-        $task = $this->task(Task\ParseXmlTask::class);
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\ListTestsXmlTask::class);
+        if ($this instanceof ContainerAwareInterface) {
+            $task->setContainer($this->getContainer());
+        }
+
+        $task->setOptions($options);
+
+        return $task;
+    }
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\MergeCoveragePhpTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitMergeCoveragePhpTask(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\MergeCoveragePhpTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\MergeCoveragePhpTask::class);
+        $task->setOptions($options);
+
+        return $task;
+    }
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitParseConfigurationXml(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\ParseConfigurationXmlTask::class);
         $task->setOptions($options);
 
         return $task;
@@ -81,6 +134,38 @@ trait PHPUnitTaskLoader
             $task->setContainer($this->getContainer());
         }
 
+        if ($this instanceof OutputAwareInterface) {
+            $task->setOutput($this->output());
+        }
+
+        $task->setOptions($options);
+
+        return $task;
+    }
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\TestCasesToCsvTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitTestCasesToCsv(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\TestCasesToCsvTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\TestCasesToCsvTask::class);
+        if ($this instanceof OutputAwareInterface) {
+            $task->setOutput($this->output());
+        }
+
+        $task->setOptions($options);
+
+        return $task;
+    }
+
+    /**
+     * @return \Sweetchuck\Robo\PHPUnit\Task\TestCasesToFileNamesTask|\Robo\Collection\CollectionBuilder
+     */
+    protected function taskPHPUnitTestCasesToFileNames(array $options = []): CollectionBuilder
+    {
+        /** @var \Sweetchuck\Robo\PHPUnit\Task\TestCasesToFileNamesTask|\Robo\Collection\CollectionBuilder $task */
+        $task = $this->task(Task\TestCasesToFileNamesTask::class);
         if ($this instanceof OutputAwareInterface) {
             $task->setOutput($this->output());
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles;
 
 use Robo\Collection\CollectionBuilder;
@@ -13,10 +15,7 @@ class PHPUnitRoboFile extends Tasks
 {
     use PHPUnitTaskLoader;
 
-    /**
-     * @var string
-     */
-    protected $composerBinDir = 'bin';
+    protected string $composerBinDir = 'vendor/bin';
 
     /**
      * {@inheritdoc}
@@ -29,130 +28,102 @@ class PHPUnitRoboFile extends Tasks
     /**
      * @command phpunit:list:groups
      */
-    public function listGroups(array $args)
-    {
-        $rootDir = $this->getRoboPhpUnitRootDir();
+    public function listGroups(
+        array $options = [
+            'workingDirectory' => './tests/_data/fixtures/project-01',
+            'configuration' => 'phpunit.xml.dist',
+        ]
+    ) {
+        $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask(
-                $this
-                    ->taskPHPUnitListGroupsTask()
-                    ->setPhpunitExecutable("$rootDir/{$this->composerBinDir}/phpunit")
-                    ->setArguments($args)
-            )
-            ->addCode(function (RoboStateData $data) {
-                $assets = $data->getData();
-                unset($assets['time']);
-
-                $this
-                    ->output()
-                    ->write(Yaml::dump($assets, 99));
-            });
+            ->addTask($this->taskPHPUnitListGroupsTask($options))
+            ->addCode($this->getTaskDumpAssets());
     }
 
     /**
      * @command phpunit:list:suites
      */
-    public function listSuites(string $configuration = 'phpunit.xml.dist')
-    {
-        $rootDir = $this->getRoboPhpUnitRootDir();
+    public function listSuites(
+        array $options = [
+            'workingDirectory' => './tests/_data/fixtures/project-01',
+            'configuration' => 'phpunit.xml.dist',
+        ]
+    ) {
+        $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask(
-                $this
-                    ->taskPHPUnitListSuitesTask()
-                    ->setPhpunitExecutable("$rootDir/{$this->composerBinDir}/phpunit")
-                    ->setConfiguration($configuration)
-            )
-            ->addCode(function (RoboStateData $data) {
-                $assets = $data->getData();
-                unset($assets['time']);
-
-                $this
-                    ->output()
-                    ->write(Yaml::dump($assets, 99));
-            });
+            ->addTask($this->taskPHPUnitListSuitesTask($options))
+            ->addCode($this->getTaskDumpAssets());
     }
 
     /**
      * @command phpunit:list:tests
      */
-    public function listTests(array $args)
-    {
-        $rootDir = $this->getRoboPhpUnitRootDir();
+    public function listTests(
+        array $options = [
+            'workingDirectory' => 'tests/_data/fixtures/project-01',
+            'configuration' => 'phpunit.xml.dist',
+        ]
+    ) {
+        $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask(
-                $this
-                    ->taskPHPUnitListTestsTask()
-                    ->setPhpunitExecutable("$rootDir/{$this->composerBinDir}/phpunit")
-                    ->setArguments($args)
-            )
-            ->addCode(function (RoboStateData $data) {
-                $assets = $data->getData();
-                unset($assets['time']);
-
-                $this
-                    ->output()
-                    ->write(Yaml::dump($assets, 99));
-            });
+            ->addTask($this->taskPHPUnitListTestsTask($options))
+            ->addCode($this->getTaskDumpAssets());
     }
 
     /**
      * @command phpunit:parse:xml
      */
-    public function parseXml(
-        string $workingDirectory,
-        string $xmlFile = ''
-    ): CollectionBuilder {
+    public function parseXml($xmlFile = 'tests/_data/fixtures/parseXml/phpunit.basic.xml'): CollectionBuilder
+    {
+        $options['phpunitExecutable'] = $this->getPhpunitExecutable();
+        $options['xmlFile'] = $xmlFile;
+
         return $this
             ->collectionBuilder()
-            ->addTask(
-                $this
-                    ->taskPHPUnitParseXml()
-                    ->setWorkingDirectory($workingDirectory)
-                    ->setXmlFile($xmlFile)
-            )
-            ->addCode(function (RoboStateData $data) {
-                $assets = $data->getData();
-                unset($assets['time']);
-
-                $this
-                    ->getContainer()
-                    ->get('output')
-                    ->writeln(Yaml::dump($assets, 99));
-
-                return 0;
-            });
+            ->addTask($this->taskPHPUnitParseConfigurationXml($options))
+            ->addCode($this->getTaskDumpAssets());
     }
 
     /**
      * @command phpunit:run
      */
     public function run(
-        string $workingDirectory,
         array $options = [
-            'configuration' => '',
+            'workingDirectory' => 'tests/_data/fixtures/project-01',
+            'configuration' => 'phpunit.xml.dist',
         ]
     ): CollectionBuilder {
-        return $this
-            ->taskPHPUnitRun()
-            ->setWorkingDirectory($workingDirectory)
-            ->setPhpunitExecutable($this->getPhpunitExecutable($workingDirectory))
-            ->setConfiguration($options['configuration']);
+        $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
+
+        return $this->taskPHPUnitRun($options);
+    }
+
+    protected function getTaskDumpAssets(): \Closure
+    {
+        return function (RoboStateData $data): int {
+            $assets = $data->getData();
+            unset($assets['time']);
+            $this->output()->write(Yaml::dump($assets, 99));
+
+            return 0;
+        };
     }
 
     protected function getRoboPhpUnitRootDir(): string
     {
-        return Path::makeRelative(__DIR__ . '/../../../..', getcwd());
+        return Path::join(__DIR__, '/../../../..');
     }
 
-    protected function getPhpunitExecutable(string $workingDirectory = ''): string
+    protected function getPhpunitExecutable(string $workingDirectory = '.'): string
     {
         $rootDir = $this->getRoboPhpUnitRootDir();
+        $workingDirectory = preg_replace('@^\.(/|$)@', getcwd() . '/', $workingDirectory);
 
         return Path::makeRelative("$rootDir/{$this->composerBinDir}/phpunit", $workingDirectory);
     }

@@ -2,8 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
+namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+/**
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask<extended>
+ * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
+ */
 class ListGroupsTaskTest extends BaseCliTaskTestBase
 {
     /**

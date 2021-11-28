@@ -8,20 +8,11 @@ use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 
 class ListGroupsTask extends BaseCliTask
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $taskName = 'PHPUnit - List groups';
+    protected string $taskName = 'PHPUnit - List groups';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserClass = ListOutputParser::class;
+    protected string $outputParserClass = ListOutputParser::class;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserAssetNameMapping = [
+    protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.groupNames',
     ];
 

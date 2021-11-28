@@ -116,20 +116,11 @@ namespace Sweetchuck\Robo\PHPUnit\Task;
  */
 class RunTask extends BaseCliTask
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $taskName = 'PHPUnit - Run';
+    protected string $taskName = 'PHPUnit - Run';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserClass = null;
+    protected string $outputParserClass = '';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserAssetNameMapping = [];
+    protected array $outputParserAssetNameMapping = [];
 
     /**
      * {@inheritdoc}

@@ -3,10 +3,13 @@
 declare(strict_types = 1);
 
 use League\Container\Container as LeagueContainer;
+use NuvoleWeb\Robo\Task\Config\Robo\loadTasks as ConfigLoader;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\ConfigAwareTrait;
 use Robo\Contract\ConfigAwareInterface;
 use Robo\Tasks;
-use Robo\Collection\CollectionBuilder;
 use Sweetchuck\LintReport\Reporter\BaseReporter;
 use Sweetchuck\Robo\Git\GitTaskLoader;
 use Sweetchuck\Robo\Phpcs\PhpcsTaskLoader;
@@ -15,13 +18,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
-use Webmozart\PathUtil\Path;
 
-class RoboFile extends Tasks implements ConfigAwareInterface
+class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterface
 {
+    use LoggerAwareTrait;
+    use ConfigAwareTrait;
+    use ConfigLoader;
     use GitTaskLoader;
     use PhpcsTaskLoader;
-    use ConfigAwareTrait;
 
     protected array $composerInfo = [];
 
@@ -162,7 +166,7 @@ class RoboFile extends Tasks implements ConfigAwareInterface
 
         if (!$this->environmentType) {
             if (getenv('CI') === 'true') {
-                // Travis and GitLab.
+                // CircleCI, Travis and GitLab.
                 $this->environmentType = 'ci';
             } elseif (getenv('JENKINS_HOME')) {
                 $this->environmentType = 'ci';
@@ -177,6 +181,8 @@ class RoboFile extends Tasks implements ConfigAwareInterface
                 $this->environmentName = 'gitlab';
             } elseif (getenv('TRAVIS') === 'true') {
                 $this->environmentName = 'travis';
+            } elseif (getenv('CIRCLECI') === 'true') {
+                $this->environmentName = 'circle';
             }
         }
 
@@ -196,16 +202,6 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         return "{$this->envVarNamePrefix}_" . strtoupper($name);
     }
 
-    protected function getPhpExecutable(): string
-    {
-        return getenv($this->getEnvVarName('php_executable')) ?: PHP_BINARY;
-    }
-
-    protected function getPhpdbgExecutable(): string
-    {
-        return getenv($this->getEnvVarName('phpdbg_executable')) ?: Path::join(PHP_BINDIR, 'phpdbg');
-    }
-
     protected function initShell()
     {
         $this->shell = getenv('SHELL');
@@ -218,12 +214,17 @@ class RoboFile extends Tasks implements ConfigAwareInterface
      */
     protected function initComposerInfo()
     {
-        $composerFileName = getenv('COMPOSER') ?: 'composer.json';
-        if ($this->composerInfo || !is_readable('composer.json')) {
+        if ($this->composerInfo) {
             return $this;
         }
 
-        $this->composerInfo = json_decode(file_get_contents($composerFileName), true);
+        $composerFile = getenv('COMPOSER') ?: 'composer.json';
+        $composerContent = file_get_contents($composerFile);
+        if ($composerContent === false) {
+            return $this;
+        }
+
+        $this->composerInfo = json_decode($composerContent, true);
         [$this->packageVendor, $this->packageName] = explode('/', $this->composerInfo['name']);
 
         if (!empty($this->composerInfo['config']['bin-dir'])) {
@@ -252,16 +253,24 @@ class RoboFile extends Tasks implements ConfigAwareInterface
             return $this;
         }
 
-        if (is_readable('codeception.yml')) {
-            $this->codeceptionInfo = Yaml::parse(file_get_contents('codeception.yml'));
-        } else {
-            $this->codeceptionInfo = [
-                'paths' => [
-                    'tests' => 'tests',
-                    'log' => 'tests/_output',
-                ],
-            ];
+        $default = [
+            'paths' => [
+                'tests' => 'tests',
+                'log' => 'tests/_output',
+            ],
+        ];
+        $dist = [];
+        $local = [];
+
+        if (is_readable('codeception.dist.yml')) {
+            $dist = Yaml::parse(file_get_contents('codeception.dist.yml'));
         }
+
+        if (is_readable('codeception.yml')) {
+            $local = Yaml::parse(file_get_contents('codeception.yml'));
+        }
+
+        $this->codeceptionInfo = array_replace_recursive($default, $dist, $local);
 
         return $this;
     }
@@ -282,6 +291,12 @@ class RoboFile extends Tasks implements ConfigAwareInterface
 
     protected function getTaskCodeceptRunSuite(string $suite): CollectionBuilder
     {
+        $php = $this->getPhpExecutableWithCoverage();
+        $envVars = [
+            'COLUMNS' => getenv('COLUMNS') ?: '80',
+        ];
+        $envVars += $php['envVar'];
+
         $this->initCodeceptionInfo();
 
         $withCoverageHtml = $this->environmentType === 'dev';
@@ -292,20 +307,17 @@ class RoboFile extends Tasks implements ConfigAwareInterface
 
         $logDir = $this->getLogDir();
 
-        $cmdArgs = [];
-        if ($this->isPhpDbgAvailable()) {
-            $cmdPattern = '%s -qrr';
-            $cmdArgs[] = escapeshellcmd($this->getPhpdbgExecutable());
-        } else {
-            $cmdPattern = '%s';
-            $cmdArgs[] = escapeshellcmd($this->getPhpExecutable());
-        }
+        $cmdPattern = '%s';
+        $cmdArgs = [
+            $php['command'],
+        ];
 
         $cmdPattern .= ' %s';
         $cmdArgs[] = escapeshellcmd("{$this->binDir}/codecept");
 
         $cmdPattern .= ' --ansi';
         $cmdPattern .= ' --verbose';
+        $cmdPattern .= ' --debug';
 
         $cb = $this->collectionBuilder();
         if ($withCoverageHtml) {
@@ -363,6 +375,13 @@ class RoboFile extends Tasks implements ConfigAwareInterface
             $cmdArgs[] = escapeshellarg($suite);
         }
 
+        $envDir = $this->codeceptionInfo['paths']['envs'];
+        $envFileName = "{$this->environmentType}.{$this->environmentName}";
+        if (file_exists("$envDir/$envFileName.yml")) {
+            $cmdPattern .= ' --env %s';
+            $cmdArgs[] = escapeshellarg($envFileName);
+        }
+
         if ($this->environmentType === 'ci' && $this->environmentName === 'jenkins') {
             // Jenkins has to use a post-build action to mark the build "unstable".
             $cmdPattern .= ' || [[ "${?}" == "1" ]]';
@@ -371,7 +390,7 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         $command = vsprintf($cmdPattern, $cmdArgs);
 
         return $cb
-            ->addCode(function () use ($command) {
+            ->addCode(function () use ($envVars, $command) {
                 $this->output()->writeln(strtr(
                     '<question>[{name}]</question> runs <info>{command}</info>',
                     [
@@ -379,12 +398,13 @@ class RoboFile extends Tasks implements ConfigAwareInterface
                         '{command}' => $command,
                     ]
                 ));
-                $process = new Process(
-                    [$this->shell, '-c', $command],
+
+                $process = Process::fromShellCommandline(
+                    $command,
+                    null,
+                    $envVars,
                     null,
                     null,
-                    null,
-                    null
                 );
 
                 return $process->run(function ($type, $data) {
@@ -413,12 +433,13 @@ class RoboFile extends Tasks implements ConfigAwareInterface
             ],
         ];
 
+        $logDir = $this->getLogDir();
         if ($this->environmentType === 'ci' && $this->environmentName === 'jenkins') {
             $options['failOn'] = 'never';
             $options['lintReporters']['lintCheckstyleReporter'] = $this
                 ->getContainer()
                 ->get('lintCheckstyleReporter')
-                ->setDestination('tests/_output/machine/checkstyle/phpcs.psr2.xml');
+                ->setDestination("$logDir/machine/checkstyle/phpcs.psr2.xml");
         }
 
         if ($this->gitHook === 'pre-commit') {
@@ -428,10 +449,15 @@ class RoboFile extends Tasks implements ConfigAwareInterface
                     ->taskPhpcsParseXml()
                     ->setAssetNamePrefix('phpcsXml.'))
                 ->addTask($this
+                    ->taskGitListStagedFiles()
+                    ->setPaths(['*.php' => true])
+                    ->setDiffFilter(['d' => false])
+                    ->setAssetNamePrefix('staged.'))
+                ->addTask($this
                     ->taskGitReadStagedFiles()
                     ->setCommandOnly(true)
                     ->setWorkingDirectory('.')
-                    ->deferTaskConfiguration('setPaths', 'phpcsXml.files'))
+                    ->deferTaskConfiguration('setPaths', 'staged.fileNames'))
                 ->addTask($this
                     ->taskPhpcsLintInput($options)
                     ->deferTaskConfiguration('setFiles', 'files')
@@ -439,26 +465,6 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         }
 
         return $this->taskPhpcsLintFiles($options);
-    }
-
-    protected function isPhpExtensionAvailable(string $extension): bool
-    {
-        $command = sprintf('%s -m', escapeshellcmd($this->getPhpExecutable()));
-
-        $process = new Process([$this->shell, '-c', $command]);
-        $exitCode = $process->run();
-        if ($exitCode !== 0) {
-            throw new \RuntimeException('@todo');
-        }
-
-        return in_array($extension, explode("\n", $process->getOutput()));
-    }
-
-    protected function isPhpDbgAvailable(): bool
-    {
-        $command = sprintf('%s -qrr', escapeshellcmd($this->getPhpdbgExecutable()));
-
-        return (new Process([$this->shell, '-c', $command]))->run() === 0;
     }
 
     protected function getLogDir(): string
@@ -475,7 +481,6 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         if (!$this->codeceptionSuiteNames) {
             $this->initCodeceptionInfo();
 
-            /** @var \Symfony\Component\Finder\Finder $suiteFiles */
             $suiteFiles = Finder::create()
                 ->in($this->codeceptionInfo['paths']['tests'])
                 ->files()
@@ -507,5 +512,21 @@ class RoboFile extends Tasks implements ConfigAwareInterface
                 1
             );
         }
+    }
+
+    protected function getPhpExecutableWithCoverage(): array
+    {
+        $default = [
+            'available' => true,
+            'envVar' => [],
+            'command' => 'php',
+        ];
+        foreach ($this->config('php.executable') as $php) {
+            if (!empty($php['available'])) {
+                return $php + $default;
+            }
+        }
+
+        return $default;
     }
 }

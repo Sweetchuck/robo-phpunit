@@ -1,12 +1,14 @@
 <?php
 
-namespace Sweetchuck\Robo\PHPUnit\TestsFixtures\Unit;
+declare(strict_types = 1);
+
+namespace Sweetchuck\Robo\PHPUnit\Test\Fixtures\Project01\Kernel;
 
 use PHPUnit\Framework\TestCase;
 
 /**
  * @group Foo1
- * @group Foo2
+ * @group Foo3
  */
 class FooTest extends TestCase
 {

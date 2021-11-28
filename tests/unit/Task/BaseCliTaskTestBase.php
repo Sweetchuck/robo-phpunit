@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
+namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
 
@@ -45,6 +45,7 @@ abstract class BaseCliTaskTestBase extends TaskTestBase
         if (array_key_exists('assets', $expected)) {
             $assets = $result->getData();
             foreach ($expected['assets'] as $assetName => $assetValue) {
+                $this->tester->assertArrayHasKey($assetName, $assets);
                 $this->tester->assertSame($assetValue, $assets[$assetName]);
             }
         }

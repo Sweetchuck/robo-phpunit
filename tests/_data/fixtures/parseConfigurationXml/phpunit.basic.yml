@@ -1,0 +1,15 @@
+---
+exitCode: 0
+
+stdOutput: |
+    phpunit.logging:
+        coverage-text: 'php://stdout'
+        coverage-html: reports/human/coverage/html
+        coverage-clover: reports/machine/coverage/coverage.xml
+    phpunit.logging.directories:
+        coverage-html: reports/human/coverage/html
+        coverage-clover: reports/machine/coverage
+
+stdError: |4+
+     [PHPUnit - Parse configuration XML] is working
+...

@@ -7,10 +7,7 @@ namespace Sweetchuck\Robo\PHPUnit\OutputParser;
 class PhpdbgOutputParser extends ParserBase
 {
 
-    /**
-     * @var int
-     */
-    protected $exitCodeOffset = 120;
+    protected int $exitCodeOffset = 120;
 
     public function parse(int $exitCode, string $stdOutput, string $stdError): array
     {

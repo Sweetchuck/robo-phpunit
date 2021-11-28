@@ -6,14 +6,9 @@ namespace Sweetchuck\Robo\PHPUnit\OutputParser;
 
 class ListOutputParser extends ParserBase
 {
-    // region assetNameMapping
-    /**
-     * {@inheritdoc}
-     */
-    protected $assetNameMapping = [
+    protected array $assetNameMapping = [
         'items' => 'items',
     ];
-    // endregion
 
     public function parse(int $exitCode, string $stdOutput, string $stdError): array
     {

@@ -8,4 +8,6 @@
 
 /.git-hooks.local
 /codeception.yml
+
+/robo.yml
 /RoboFileLocal.php

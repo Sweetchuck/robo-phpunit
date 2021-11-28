@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\OutputParser;
+namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
 use Sweetchuck\Robo\PHPUnit\OutputParser\PhpdbgOutputParser;
 

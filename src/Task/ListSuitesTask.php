@@ -8,20 +8,11 @@ use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 
 class ListSuitesTask extends BaseCliTask
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $taskName = 'PHPUnit - List suites';
+    protected string $taskName = 'PHPUnit - List suites';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserClass = ListOutputParser::class;
+    protected string $outputParserClass = ListOutputParser::class;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $outputParserAssetNameMapping = [
+    protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.suitNames',
     ];
 

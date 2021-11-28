@@ -1,0 +1,10 @@
+<phpunit>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+        <testsuite name="Kernel">
+            <directory>Kernel</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

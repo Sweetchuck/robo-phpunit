@@ -4,14 +4,16 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
+use Consolidation\AnnotatedCommand\Output\OutputAwareInterface;
 use Robo\Common\OutputAwareTrait;
 use Robo\Contract\CommandInterface;
-use Robo\Contract\OutputAwareInterface;
 use Sweetchuck\CliCmdBuilder\CommandBuilder;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Process\Process;
 
 /**
+ * @method bool    getHideStdOutput()
+ * @method $this   setHideStdOutput()
  * @method null|int getProcessTimeout()
  * @method $this    setProcessTimeout(null|int $timeout)
  * @method string|\Sweetchuck\CliCmdBuilder\CommandBuilderInterface getPhpExecutable()
@@ -29,20 +31,11 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 {
     use OutputAwareTrait;
 
-    /**
-     * @var string
-     */
-    protected $command = '';
+    protected string $command = '';
 
-    /**
-     * @var null|\Sweetchuck\CliCmdBuilder\CommandBuilder
-     */
-    protected $cmdBuilder = null;
+    protected ?CommandBuilder $cmdBuilder = null;
 
-    /**
-     * @var array
-     */
-    protected $optionGroupWeights = [
+    protected array $optionGroupWeights = [
         'coverage' => 100,
         'coverageOther' => 200,
         'logging' => 300,
@@ -51,15 +44,16 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         'testSelection' => 600,
     ];
 
-    /**
-     * @var null|\Closure
-     */
-    protected $processRunCallbackWrapper = null;
+    protected ?\Closure $processRunCallbackWrapper = null;
 
     protected function initOptions()
     {
         parent::initOptions();
         $this->options += [
+            'hideStdOutput' => [
+                'type' => 'other',
+                'value' => true,
+            ],
             'processTimeout' => [
                 'type' => 'other',
                 'value' => 60,
@@ -95,6 +89,40 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         ];
 
         return $this;
+    }
+
+    protected function initOptionsTestSelection()
+    {
+        return [
+            'testsuite' => [
+                'type' => 'option:value:list',
+                'value' => [],
+            ],
+            'group' => [
+                'type' => 'option:value:list',
+                'value' => [],
+            ],
+            'excludeGroup' => [
+                'type' => 'option:value:list',
+                'value' => [],
+            ],
+            'covers' => [
+                'type' => 'option:value',
+                'value' => null,
+            ],
+            'uses' => [
+                'type' => 'option:value',
+                'value' => null,
+            ],
+            'filter' => [
+                'type' => 'option:value',
+                'value' => null,
+            ],
+            'testSuffix' => [
+                'type' => 'option:value:list',
+                'value' => [],
+            ],
+        ];
     }
 
     public function getEnvVars(): array
@@ -338,7 +366,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     {
         switch ($type) {
             case Process::OUT:
-                $this->output()->write($data);
+                if (!$this->getHideStdOutput()) {
+                    $this->output()->write($data);
+                }
                 break;
 
             case Process::ERR:

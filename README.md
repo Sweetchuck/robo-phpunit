@@ -1,9 +1,7 @@
 # Robo task to run PHPUnit related tasks
 
-[![CircleCI](https://circleci.com/gh/Sweetchuck/robo-phpunit.svg?style=svg)](https://circleci.com/gh/Sweetchuck/robo-phpunit)
-[![codecov](https://codecov.io/gh/Sweetchuck/robo-phpunit/branch/1.x/graph/badge.svg)](https://codecov.io/gh/Sweetchuck/robo-phpunit)
-
-@todo
+[![CircleCI](https://circleci.com/gh/Sweetchuck/robo-phpunit/tree/2.x.svg?style=svg)](https://circleci.com/gh/Sweetchuck/robo-phpunit/?branch=2.x)
+[![codecov](https://codecov.io/gh/Sweetchuck/robo-phpunit/branch/2.x/graph/badge.svg?token=HSF16OGPyr)](https://app.codecov.io/gh/Sweetchuck/robo-phpunit/branch/2.x)
 
 
 ## Install
@@ -40,7 +38,7 @@ class RoboFile extends \Robo\Tasks
 }
 ```
 
-Run `vendor/bin/robo phpunit:list-groups`  
+Run `vendor/bin/robo phpunit:list-groups` \
 Example output:
 > <pre>foo
 > bar</pre>
@@ -57,7 +55,7 @@ class RoboFile extends \Robo\Tasks
 }
 ```
 
-Run `vendor/bin/robo phpunit:`  
+Run `vendor/bin/robo phpunit:` \
 Example output:
 > <pre></pre>
 
@@ -73,7 +71,7 @@ class RoboFile extends \Robo\Tasks
 }
 ```
 
-Run `vendor/bin/robo phpunit:`  
+Run `vendor/bin/robo phpunit:` \
 Example output:
 > <pre></pre>
 

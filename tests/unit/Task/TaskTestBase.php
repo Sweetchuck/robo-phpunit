@@ -2,16 +2,18 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\PHPUnit\Tests\Unit\Task;
+namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Codeception\Test\Unit;
 use League\Container\Container as LeagueContainer;
 use Robo\Collection\CollectionBuilder;
 use Robo\Config\Config;
+use Robo\Config\Config as RoboConfig;
 use Robo\Robo;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcessHelper;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyTaskBuilder;
+use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyOutput;
 use Symfony\Component\ErrorHandler\BufferingLogger;
@@ -23,30 +25,23 @@ abstract class TaskTestBase extends Unit
      */
     protected $container;
 
-    /**
-     * @var \Robo\Config\Config
-     */
-    protected $config;
+    protected RoboConfig $config;
 
-    /**
-     * @var \Robo\Collection\CollectionBuilder
-     */
-    protected $builder;
+    protected CollectionBuilder $builder;
 
-    /**
-     * @var \Sweetchuck\Robo\PHPUnit\Test\UnitTester
-     */
-    protected $tester;
+    protected UnitTester $tester;
 
     /**
      * @var \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
      */
     protected $task;
 
-    /**
-     * @var \Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyTaskBuilder
-     */
-    protected $taskBuilder;
+    protected DummyTaskBuilder $taskBuilder;
+
+    protected function selfProjectRoot(): string
+    {
+        return dirname(__DIR__, 3);
+    }
 
     /**
      * @inheritdoc

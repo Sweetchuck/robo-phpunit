@@ -21,30 +21,39 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "bin-dir": "bin",
         "optimize-autoloader": true,
         "sort-packages": true
+    },
+    "repositories": {
+        "nuvoleweb/robo-config": {
+            "type": "github",
+            "url": "https://github.com/Sweetchuck/robo-config"
+        }
     },
     "require": {
         "php": ">=7.4",
         "ext-dom": "*",
         "ext-pcre": "*",
-        "consolidation/robo": "^2.0",
+        "consolidation/robo": "^3.0",
         "danielstjules/stringy": "^3.1",
+        "phpunit/php-code-coverage": "^7.0 || ^8.0 || ^9.2",
+        "phpunit/phpunit": "^8.5 || ^9.5",
         "sweetchuck/cli-cmd-builder": "^0.0",
-        "sweetchuck/utils": "1.x-dev"
+        "sweetchuck/utils": "1.x-dev",
+        "symfony/console": "^4.4 || ^5.0"
     },
     "require-dev": {
         "ext-json": "*",
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.1",
+        "nuvoleweb/robo-config": "3.x-dev",
         "squizlabs/php_codesniffer": "^3.5",
-        "sweetchuck/codeception-module-robo-task-runner": "1.x-dev",
+        "sweetchuck/codeception-module-robo-task-runner": "2.x-dev",
         "sweetchuck/git-hooks": "^2.x-dev",
-        "sweetchuck/robo-git": "1.x-dev",
-        "sweetchuck/robo-phpcs": "1.x-dev",
-        "symfony/error-handler": "^4.0 || ^5.0",
-        "symfony/console": "^4.4 || ^5.0",
+        "sweetchuck/robo-git": "2.x-dev",
+        "sweetchuck/robo-phpcs": "2.x-dev",
+        "symfony/debug": "^4.4 || ^5.0",
+        "symfony/error-handler": "^4.4 || ^5.0",
         "symfony/finder": "^4.0 || ^5.0",
         "webmozart/path-util": "^2.3"
     },
@@ -58,10 +67,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Sweetchuck\\Robo\\PHPUnit\\Test\\": "tests/_support/",
-            "Sweetchuck\\Robo\\PHPUnit\\Tests\\Acceptance\\": "tests/acceptance/",
-            "Sweetchuck\\Robo\\PHPUnit\\Tests\\Unit\\": "tests/unit/",
-            "Sweetchuck\\Robo\\PHPUnit\\TestsFixtures\\": "tests/_data/fixtures/"
+            "Sweetchuck\\Robo\\PHPUnit\\Test\\Acceptance\\": "tests/acceptance/",
+            "Sweetchuck\\Robo\\PHPUnit\\Test\\Unit\\": "tests/unit/",
+            "Sweetchuck\\Robo\\PHPUnit\\Test\\Fixtures\\Project01\\": "tests/_data/fixtures/project-01/",
+            "Sweetchuck\\Robo\\PHPUnit\\Test\\": "tests/_support/"
         }
     },
     "scripts": {},

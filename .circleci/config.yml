@@ -11,23 +11,13 @@ version: 2.1
     COMPOSER_NO_INTERACTION: '1'
     COMPOSER_MEMORY_LIMIT: '-1'
     COMPOSER_DISABLE_XDEBUG_WARN: '1'
+    COMPOSER_CACHE_DIR: '/home/circleci/.cache/composer'
 
 orbs:
     codecov: 'codecov/codecov@1.2.4'
 
 executors:
-    php800:
-        environment:
-            <<: *env_common
-            <<: *env_xdebug
-            <<: *env_composer
-
-        docker:
-            -
-                name: 'main'
-                image: 'circleci/php:8.0'
-
-    php704:
+    php_min:
         environment:
             <<: *env_common
             <<: *env_xdebug
@@ -38,7 +28,27 @@ executors:
                 name: 'main'
                 image: 'circleci/php:7.4'
 
+    php_plus1:
+        environment:
+            <<: *env_common
+            <<: *env_xdebug
+            <<: *env_composer
+
+        docker:
+            -
+                name: 'main'
+                image: 'circleci/php:8.0'
+
 commands:
+    pecl_install_pcov:
+        description: 'Install PCOV extension for PHP'
+        steps:
+            -
+                run:
+                    name: 'Install PCOV extension for PHP – pecl install'
+                    command: |
+                        sudo pecl install pcov
+
     composer_install:
         description: 'Install Composer dependencies with cache restore and save'
         steps:
@@ -59,7 +69,6 @@ commands:
                     name: 'Composer - cache save'
                     key: 'composer-{{ checksum "./composer.lock" }}-2'
                     paths:
-                        - '~/.composer/cache/'
                         - '~/.cache/composer/'
 
 
@@ -69,7 +78,8 @@ commands:
             -
                 run:
                     name: 'Run linters'
-                    command: 'bin/robo lint'
+                    command: |
+                        "$(composer config bin-dir)/robo" -vvv lint
 
     test:
         description: 'Run tests'
@@ -77,7 +87,8 @@ commands:
             -
                 run:
                     name: 'Codeception - unit'
-                    command: 'bin/robo test unit'
+                    command: |
+                        "$(composer config bin-dir)/robo" test unit
             -
                 codecov/upload:
                     flags: 'unit'
@@ -85,41 +96,48 @@ commands:
             -
                 run:
                     name: 'Codeception - acceptance'
-                    command: 'bin/robo test acceptance'
+                    command: |
+                        "$(composer config bin-dir)/robo" test acceptance
             -
                 codecov/upload:
                     flags: 'acceptance'
                     file: './tests/_output/machine/coverage/acceptance/coverage.xml'
             -
                 store_test_results:
-                    name: 'Store unit test results'
+                    name: 'Store test results as test results for CircleCI UI'
+                    path: './tests/_output/machine/junit'
+            -
+                store_artifacts:
+                    name: 'Store test results as artifacts'
                     path: './tests/_output/machine/junit'
 
 jobs:
     build:
-        executor: 'php704'
+        executor: 'php_min'
         working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
     lint:
-        executor: 'php704'
+        executor: 'php_min'
         working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'lint'
-    test_php800:
-        executor: 'php800'
+    test_php_min:
+        executor: 'php_min'
         working_directory: '~/repo'
         steps:
+            - 'pecl_install_pcov'
             - 'checkout'
             - 'composer_install'
             - 'test'
-    test_php704:
-        executor: 'php704'
+    test_php_plus1:
+        executor: 'php_plus1'
         working_directory: '~/repo'
         steps:
+            - 'pecl_install_pcov'
             - 'checkout'
             - 'composer_install'
             - 'test'
@@ -132,12 +150,12 @@ workflows:
             -
                 lint:
                     requires:
-                        - build
+                        - 'build'
             -
-                test_php800:
+                test_php_min:
                     requires:
-                        - build
+                        - 'build'
             -
-                test_php704:
+                test_php_plus1:
                     requires:
-                        - build
+                        - 'build'

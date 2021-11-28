@@ -4,12 +4,13 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
-use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
+use Codeception\Test\Unit;
+use Sweetchuck\Robo\PHPUnit\OutputParser\ListTestsXmlOutputParser;
 
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser
+ * @covers \Sweetchuck\Robo\PHPUnit\OutputParser\ListTestsXmlOutputParser
  */
-class ListOutputParserTest extends \Codeception\Test\Unit
+class ListTestsXmlOutputParserTest extends Unit
 {
 
     public function casesParse(): array
@@ -23,9 +24,8 @@ class ListOutputParserTest extends \Codeception\Test\Unit
             ],
             'empty' => [
                 [
-                    'assets' => [
-                        'items' => [],
-                    ],
+                    'exitCode' => 2,
+                    'assets' => [],
                 ],
                 0,
                 '',
@@ -34,18 +34,21 @@ class ListOutputParserTest extends \Codeception\Test\Unit
             'basic' => [
                 [
                     'assets' => [
-                        'items' => [
-                            'a b',
-                            'cd',
-                        ],
+                        'xml' => implode(PHP_EOL, [
+                            '<?xml version="1.0"?>',
+                            '<tests>',
+                            '</tests>',
+                        ]),
                     ],
                 ],
                 0,
                 implode(PHP_EOL, [
-                    'header 01',
-                    ' - a b',
-                    ' - cd',
+                    'foo',
                     '',
+                    '<?xml version="1.0"?>',
+                    '<tests>',
+                    '</tests>',
+                    'bar',
                 ]),
                 '',
             ],
@@ -57,7 +60,7 @@ class ListOutputParserTest extends \Codeception\Test\Unit
      */
     public function testParse(array $expected, int $exitCode, string $stdOutput, string $stdError): void
     {
-        $parser = new ListOutputParser();
+        $parser = new ListTestsXmlOutputParser();
         static::assertSame($expected, $parser->parse($exitCode, $stdOutput, $stdError));
     }
 }

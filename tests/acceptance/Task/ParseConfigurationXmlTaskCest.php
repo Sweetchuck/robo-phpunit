@@ -2,23 +2,26 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\Robo\PHPUnit\Tests\Acceptance\Task;
+namespace Sweetchuck\Robo\PHPUnit\Test\Acceptance\Task;
 
 use Codeception\Example;
 use Sweetchuck\Robo\PHPUnit\Test\AcceptanceTester;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Webmozart\PathUtil\Path;
 
-class ParseXmlTaskCest
+/**
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask<extended>
+ * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
+ */
+class ParseConfigurationXmlTaskCest
 {
     protected function parseXmlExamples(): array
     {
         $fixturesDir = codecept_data_dir('fixtures');
 
         $phpUnitXmlFiles = (new Finder())
-            ->in($fixturesDir)
+            ->in("$fixturesDir/parseConfigurationXml")
             ->name('phpunit.*.xml');
 
         $replacements = [
@@ -36,9 +39,10 @@ class ParseXmlTaskCest
             );
             $examples[$id] = [
                 'id' => $id,
-                'workingDirectory' => Path::join($fixturesDir, $phpUnitXmlFile->getRelativePath()),
-                'xmlFile' => $phpUnitXmlFile->getFilename(),
                 'expected' => Yaml::parse(strtr(file_get_contents($expectedFileName), $replacements)),
+                'args' => [
+                    $phpUnitXmlFile->getPathname(),
+                ],
             ];
         }
 
@@ -54,8 +58,7 @@ class ParseXmlTaskCest
             $example['id'],
             PHPUnitRoboFile::class,
             'phpunit:parse:xml',
-            $example['workingDirectory'],
-            $example['xmlFile']
+            ...$example['args'],
         );
         $exitCode = $tester->getRoboTaskExitCode($example['id']);
         $stdOutput = $tester->getRoboTaskStdOutput($example['id']);
