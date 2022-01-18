@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * @method bool    getHideStdOutput()
- * @method $this   setHideStdOutput()
+ * @method $this   setHideStdOutput(bool $hide)
  * @method null|int getProcessTimeout()
  * @method $this    setProcessTimeout(null|int $timeout)
  * @method string|\Sweetchuck\CliCmdBuilder\CommandBuilderInterface getPhpExecutable()
