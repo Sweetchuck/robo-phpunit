@@ -76,4 +76,12 @@ class Utils
 
         return $rootTagName !== '' && mb_strpos($content, "<$rootTagName") === 0;
     }
+
+    public static function delimit(string $text, string $delimiter): string
+    {
+        $str = mb_ereg_replace('\B([A-Z])', '-\1', trim($text), 'msr');
+        $str = mb_strtolower($str);
+
+        return mb_ereg_replace('[-_\s]+', $delimiter, $str);
+    }
 }

@@ -10,9 +10,9 @@ use League\Container\ContainerAwareTrait;
 use Robo\Result;
 use Robo\Task\BaseTask as RoboBaseTask;
 use Robo\TaskInfo;
-use Stringy\StaticStringy;
 use Sweetchuck\Robo\PHPUnit\OutputParser\PhpdbgOutputParser;
 use Sweetchuck\Robo\PHPUnit\OutputParserInterface;
+use Sweetchuck\Robo\PHPUnit\Utils;
 use Sweetchuck\Utils\Comparer\ArrayValueComparer;
 
 /**
@@ -81,7 +81,7 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         foreach (array_keys($this->options) as $optionName) {
             $this->options[$optionName]['name'] = $optionName;
             if (!array_key_exists('cliName', $this->options[$optionName])) {
-                $this->options[$optionName]['cliName'] = StaticStringy::dasherize($optionName);
+                $this->options[$optionName]['cliName'] = Utils::delimit($optionName, '-');
             }
         }
         uasort($this->options, new ArrayValueComparer([
