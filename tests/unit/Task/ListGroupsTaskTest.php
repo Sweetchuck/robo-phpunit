@@ -27,11 +27,11 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
     {
         return [
             'basic' => [
-                "phpdbg -qrr 'vendor/bin/phpunit' --list-groups",
+                "php 'vendor/bin/phpunit' --list-groups",
                 [],
             ],
             'arguments vector' => [
-                "phpdbg -qrr 'vendor/bin/phpunit' --list-groups 'my-dir'",
+                "php 'vendor/bin/phpunit' --list-groups 'my-dir'",
                 [
                     'arguments' => ['my-dir'],
                 ],

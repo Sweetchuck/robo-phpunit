@@ -25,7 +25,7 @@ class ListTestsXmlTaskTest extends BaseCliTaskTestBase
     {
         return [
             'basic' => [
-                "phpdbg -qrr 'vendor/bin/phpunit' --list-tests-xml='php://stdout'",
+                "php 'vendor/bin/phpunit' --list-tests-xml='php://stdout'",
                 [],
             ],
         ];

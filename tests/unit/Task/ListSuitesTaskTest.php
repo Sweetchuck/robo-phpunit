@@ -28,7 +28,7 @@ class ListSuitesTaskTest extends BaseCliTaskTestBase
     {
         return [
             'basic' => [
-                "phpdbg -qrr 'vendor/bin/phpunit' --list-suites",
+                "php 'vendor/bin/phpunit' --list-suites",
                 [],
             ],
         ];

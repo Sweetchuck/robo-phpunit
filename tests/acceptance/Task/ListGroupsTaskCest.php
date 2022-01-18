@@ -66,7 +66,11 @@ class ListGroupsTaskCest
         $stdError = $tester->getRoboTaskStdError($example['id']);
 
         if (isset($example['expected']['exitCode'])) {
-            $tester->assertSame($example['expected']['exitCode'], $exitCode, 'exitCode');
+            $tester->assertSame(
+                $example['expected']['exitCode'],
+                $exitCode,
+                "exitCode;\n---\n$stdOutput\n---\n$stdError",
+            );
         }
 
         if (isset($example['expected']['stdOutput'])) {

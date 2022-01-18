@@ -64,7 +64,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
             ],
             'phpExecutable' => [
                 'type' => 'executable',
-                'value' => 'phpdbg -qrr',
+                'value' => 'php',
             ],
             'phpunitExecutable' => [
                 'type' => 'other',

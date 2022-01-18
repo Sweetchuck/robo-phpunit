@@ -22,7 +22,10 @@
     "prefer-stable": true,
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "sweetchuck/git-hooks": true
+        }
     },
     "repositories": {
         "nuvoleweb/robo-config": {
@@ -33,9 +36,9 @@
     "require": {
         "php": ">=7.4",
         "ext-dom": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "consolidation/robo": "^3.0",
-        "danielstjules/stringy": "^3.1",
         "phpunit/php-code-coverage": "^7.0 || ^8.0 || ^9.2",
         "phpunit/phpunit": "^8.5 || ^9.5",
         "sweetchuck/cli-cmd-builder": "^0.0",
@@ -45,7 +48,7 @@
     "require-dev": {
         "ext-json": "*",
         "codeception/codeception": "^4.1",
-        "codeception/module-asserts": "^1.1",
+        "codeception/module-asserts": "^2.0",
         "nuvoleweb/robo-config": "3.x-dev",
         "squizlabs/php_codesniffer": "^3.5",
         "sweetchuck/codeception-module-robo-task-runner": "2.x-dev",
