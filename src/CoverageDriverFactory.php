@@ -5,14 +5,10 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit;
 
 use SebastianBergmann\CodeCoverage\Driver\Driver as CoverageDriver;
-use SebastianBergmann\CodeCoverage\Driver\PCOV;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
 use SebastianBergmann\CodeCoverage\Driver\PhpdbgDriver;
-use SebastianBergmann\CodeCoverage\Driver\Xdebug as XdebugDriver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug2Driver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
-
-
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\Environment\Runtime;
 
@@ -52,7 +48,7 @@ class CoverageDriverFactory
         return $this;
     }
 
-    public function createInstance(?Filter $filter = null): ?CoverageDriver
+    public function createInstance(Filter $filter): ?CoverageDriver
     {
         $precedenceList = array_keys($this->getPrecedenceList());
         $driver = null;
@@ -68,7 +64,7 @@ class CoverageDriverFactory
                     break;
 
                 case 'phpdbg':
-                    $driver = $this->createInstancePhpdbg($filter);
+                    $driver = $this->createInstancePhpdbg();
                     break;
             }
         }
@@ -76,7 +72,7 @@ class CoverageDriverFactory
         return $driver;
     }
 
-    public function createInstancePcov(?Filter $filter)
+    public function createInstancePcov(Filter $filter)
     {
         if (!(new Runtime())->hasPCOV()) {
             return null;
@@ -86,21 +82,13 @@ class CoverageDriverFactory
             return new PcovDriver($filter);
         }
 
-        if (class_exists(PCOV::class)) {
-            return new PCOV();
-        }
-
         throw new \Exception('not supported phpunit version');
     }
 
-    public function createInstanceXdebug(?Filter $filter)
+    public function createInstanceXdebug(Filter $filter)
     {
         if (!(new Runtime())->hasXdebug()) {
             return null;
-        }
-
-        if (class_exists(XdebugDriver::class)) {
-            return new XdebugDriver($filter);
         }
 
         $xdebugVersion = phpversion('xdebug');
@@ -113,7 +101,7 @@ class CoverageDriverFactory
         return $driver;
     }
 
-    public function createInstancePhpdbg(?Filter $filter)
+    public function createInstancePhpdbg()
     {
         if (!(new Runtime())->hasPHPDBGCodeCoverage()) {
             return null;

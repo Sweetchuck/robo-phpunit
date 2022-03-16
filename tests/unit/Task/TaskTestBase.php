@@ -65,7 +65,7 @@ abstract class TaskTestBase extends Unit
         $this->container->add('container', $this->container);
 
         Robo::configureContainer($this->container, $application, $this->config, $input, $output);
-        $this->container->share('logger', BufferingLogger::class);
+        $this->container->add('logger', BufferingLogger::class);
 
         $this->builder = CollectionBuilder::create($this->container, null);
         $this->taskBuilder = new DummyTaskBuilder();
