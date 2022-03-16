@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit;
 
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use SebastianBergmann\CodeCoverage\Report\PHP as PhpReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -52,7 +53,7 @@ class CoveragePhpMerger
     protected function startCoverage()
     {
         $factory = $this->getCoverageDriverFactory() ?: new CoverageDriverFactory();
-        $filter = null;
+        $filter = new CodeCoverageFilter();
         $driver = $factory->createInstance($filter);
         $this->coverage = new CodeCoverage($driver, $filter);
 
