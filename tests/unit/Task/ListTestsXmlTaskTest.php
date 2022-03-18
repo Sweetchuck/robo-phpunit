@@ -16,11 +16,14 @@ class ListTestsXmlTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = $this->taskBuilder->taskPHPUnitListTestsXmlTask();
+        $this->task = $this->taskBuilder->taskPHPUnitListTestsXml();
 
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesGetCommand(): array
     {
         return [
@@ -31,6 +34,9 @@ class ListTestsXmlTaskTest extends BaseCliTaskTestBase
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesRunSuccess(): array
     {
         $xml01 = [

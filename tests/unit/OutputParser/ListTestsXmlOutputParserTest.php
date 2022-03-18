@@ -13,6 +13,9 @@ use Sweetchuck\Robo\PHPUnit\OutputParser\ListTestsXmlOutputParser;
 class ListTestsXmlOutputParserTest extends Unit
 {
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesParse(): array
     {
         return [
@@ -56,6 +59,8 @@ class ListTestsXmlOutputParserTest extends Unit
     }
 
     /**
+     * @param array<string, mixed> $expected
+     *
      * @dataProvider casesParse
      */
     public function testParse(array $expected, int $exitCode, string $stdOutput, string $stdError): void

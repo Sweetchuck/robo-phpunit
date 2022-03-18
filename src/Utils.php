@@ -8,6 +8,12 @@ use Webmozart\PathUtil\Path;
 
 class Utils
 {
+
+    /**
+     * @param array<int|string, mixed> $items
+     *
+     * @return array<string>
+     */
     public static function filterEnabled(array $items): array
     {
         return (gettype(reset($items)) === 'boolean') ?
@@ -15,11 +21,11 @@ class Utils
             : $items;
     }
 
-    public static function isPhpDbg(string $phpExecutable): bool
-    {
-        return mb_strpos(Path::getFilename($phpExecutable), 'phpdbg') !== false;
-    }
-
+    /**
+     * @param string|resource $xmlFile
+     *
+     * @return null|string
+     */
     public static function getXmlString(
         $xmlFile,
         string $rootTagName = '',
@@ -79,9 +85,9 @@ class Utils
 
     public static function delimit(string $text, string $delimiter): string
     {
-        $str = mb_ereg_replace('\B([A-Z])', '-\1', trim($text), 'msr');
+        $str = (string) mb_ereg_replace('\B([A-Z])', '-\1', trim($text), 'msr');
         $str = mb_strtolower($str);
 
-        return mb_ereg_replace('[-_\s]+', $delimiter, $str);
+        return (string) mb_ereg_replace('[-_\s]+', $delimiter, $str);
     }
 }

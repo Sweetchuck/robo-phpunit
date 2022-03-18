@@ -15,7 +15,7 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = $this->taskBuilder->taskPHPUnitListGroupsTask();
+        $this->task = $this->taskBuilder->taskPHPUnitListGroups();
 
         return $this;
     }

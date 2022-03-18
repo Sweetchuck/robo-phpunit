@@ -26,7 +26,7 @@ class ListTestsXmlTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - List tests XML';
 
-    protected string $outputParserClass = ListTestsXmlOutputParser::class;
+    protected ?string $outputParserClass = ListTestsXmlOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
         'xml' => 'phpunit.tests.xml',

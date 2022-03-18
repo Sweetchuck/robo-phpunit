@@ -15,6 +15,10 @@ use Symfony\Component\Finder\Finder;
  */
 class ListSuitesTaskCest
 {
+
+    /**
+     * @return array<string, dev-list-suites-examples-array>
+     */
     protected function listSuitesExamples(): array
     {
         $fixturesDir = codecept_data_dir('fixtures');
@@ -50,9 +54,11 @@ class ListSuitesTaskCest
     }
 
     /**
+     * @param \Codeception\Example<dev-list-suites-examples-array> $example
+     *
      * @dataProvider listSuitesExamples
      */
-    public function listSuites(AcceptanceTester $tester, Example $example)
+    public function listSuites(AcceptanceTester $tester, Example $example): void
     {
         $tester->runRoboTask(
             $example['id'],

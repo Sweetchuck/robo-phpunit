@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles;
 
 use Robo\Collection\CollectionBuilder;
+use Robo\Contract\TaskInterface;
 use Robo\Tasks;
 use Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader;
 use Robo\State\Data as RoboStateData;
@@ -26,6 +27,8 @@ class PHPUnitRoboFile extends Tasks
     }
 
     /**
+     * @phpstan-param array<string, mixed> $options
+     *
      * @command phpunit:list:groups
      */
     public function listGroups(
@@ -33,16 +36,18 @@ class PHPUnitRoboFile extends Tasks
             'workingDirectory' => './tests/_data/fixtures/project-01',
             'configuration' => 'phpunit.xml.dist',
         ]
-    ) {
+    ): TaskInterface {
         $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskPHPUnitListGroupsTask($options))
+            ->addTask($this->taskPHPUnitListGroups($options))
             ->addCode($this->getTaskDumpAssets());
     }
 
     /**
+     * @phpstan-param array<string, mixed> $options
+     *
      * @command phpunit:list:suites
      */
     public function listSuites(
@@ -50,16 +55,18 @@ class PHPUnitRoboFile extends Tasks
             'workingDirectory' => './tests/_data/fixtures/project-01',
             'configuration' => 'phpunit.xml.dist',
         ]
-    ) {
+    ): TaskInterface {
         $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskPHPUnitListSuitesTask($options))
+            ->addTask($this->taskPHPUnitListSuites($options))
             ->addCode($this->getTaskDumpAssets());
     }
 
     /**
+     * @phpstan-param array<string, mixed> $options
+     *
      * @command phpunit:list:tests
      */
     public function listTests(
@@ -67,19 +74,19 @@ class PHPUnitRoboFile extends Tasks
             'workingDirectory' => 'tests/_data/fixtures/project-01',
             'configuration' => 'phpunit.xml.dist',
         ]
-    ) {
+    ): TaskInterface {
         $options['phpunitExecutable'] = $this->getPhpunitExecutable($options['workingDirectory']);
 
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskPHPUnitListTestsTask($options))
+            ->addTask($this->taskPHPUnitListTests($options))
             ->addCode($this->getTaskDumpAssets());
     }
 
     /**
      * @command phpunit:parse:xml
      */
-    public function parseXml($xmlFile = 'tests/_data/fixtures/parseXml/phpunit.basic.xml'): CollectionBuilder
+    public function parseXml(string $xmlFile = 'tests/_data/fixtures/parseXml/phpunit.basic.xml'): CollectionBuilder
     {
         $options['phpunitExecutable'] = $this->getPhpunitExecutable();
         $options['xmlFile'] = $xmlFile;
@@ -91,6 +98,8 @@ class PHPUnitRoboFile extends Tasks
     }
 
     /**
+     * @phpstan-param array<string, mixed> $options
+     *
      * @command phpunit:run
      */
     public function run(

@@ -26,7 +26,7 @@ class ListTestsTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - List tests';
 
-    protected string $outputParserClass = ListOutputParser::class;
+    protected ?string $outputParserClass = ListOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.testMethods',

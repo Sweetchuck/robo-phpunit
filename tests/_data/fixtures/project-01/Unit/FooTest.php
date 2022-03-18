@@ -12,11 +12,14 @@ use PHPUnit\Framework\TestCase;
  */
 class FooTest extends TestCase
 {
-    public function testDummy()
+    public function testDummy(): void
     {
         $this->assertTrue(true);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesDummy02(): array
     {
         return [
@@ -28,7 +31,7 @@ class FooTest extends TestCase
     /**
      * @dataProvider casesDummy02
      */
-    public function testDummy02(bool $expected)
+    public function testDummy02(bool $expected): void
     {
         $this->assertSame($expected, true);
     }

@@ -118,8 +118,6 @@ class RunTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - Run';
 
-    protected string $outputParserClass = '';
-
     protected array $outputParserAssetNameMapping = [];
 
     /**

@@ -12,6 +12,10 @@ use Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser;
  */
 class PHPUnitConfigurationXmlParserTest extends Unit
 {
+
+    /**
+     * @return array<string, mixed>
+     */
     public function casesParse(): array
     {
         return [
@@ -80,9 +84,11 @@ class PHPUnitConfigurationXmlParserTest extends Unit
     }
 
     /**
+     * @param array<string, mixed> $expected
+     *
      * @dataProvider casesParse
      */
-    public function testParse(array $expected, string $xmlString, string $baseDir = '')
+    public function testParse(array $expected, string $xmlString, string $baseDir = ''): void
     {
         $parser = new PHPUnitConfigurationXmlParser();
         $this->assertEquals($expected, $parser->parse($xmlString, $baseDir));

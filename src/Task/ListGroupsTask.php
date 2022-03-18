@@ -10,7 +10,7 @@ class ListGroupsTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - List groups';
 
-    protected string $outputParserClass = ListOutputParser::class;
+    protected ?string $outputParserClass = ListOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.groupNames',

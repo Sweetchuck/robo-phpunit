@@ -1,0 +1,63 @@
+parameters:
+    typeAliases:
+        dev-php-executable-array: '''
+            array{
+                enabled: bool,
+                command: string,
+                envVars?: array<string, ?string>,
+            }
+        '''
+        dev-process-result-array: '''
+            array{
+                exitCode: int,
+                stdOutput: string,
+                stdError: string,
+            }
+        '''
+        dev-delimit-test-case-array: '''
+            array{
+                0: string,
+                1: string,
+                2: string,
+            }
+        '''
+        dev-to-file-names-success-case-array: '''
+            array{
+                0: array<string>,
+                1: string,
+                2: string,
+            }
+        '''
+        dev-to-csv-test-case-array: '''
+            array{
+                0: string,
+                1: dev-to-csv-args-array,
+            }
+        '''
+
+        dev-to-csv-args-array: '''
+            array{
+                0: string,
+                1: string,
+                2?: array<string>,
+                3?: array<string, mixed>,
+            }
+        '''
+        dev-parse-xml-examples-array: '''
+            array{
+                id: string,
+                expected: string,
+                args: array<int, string>,
+            }
+        '''
+        dev-list-suites-examples-array: '''
+            array{
+                id: string,
+                expected: array{
+                    exitCode?: int,
+                    stdOutput?: string,
+                    stdError?: string,
+                },
+                args: array<int, string>,
+            }
+        '''

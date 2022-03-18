@@ -9,5 +9,7 @@
 /.git-hooks.local
 /codeception.yml
 
+/phpstan.neon
+
 /robo.yml
 /RoboFileLocal.php

@@ -13,8 +13,13 @@ class ParseConfigurationXmlTaskTest extends TaskTestBase
     protected function initTask()
     {
         $this->task = $this->taskBuilder->taskPHPUnitParseConfigurationXml();
+
+        return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesRunSuccess(): array
     {
         $xmlContent = implode(PHP_EOL, [
@@ -59,9 +64,12 @@ class ParseConfigurationXmlTaskTest extends TaskTestBase
     }
 
     /**
+     * @param array<string, mixed> $expected
+     * @param array<string, mixed> $options
+     *
      * @dataProvider casesRunSuccess
      */
-    public function testRunSuccess($expected, array $options): void
+    public function testRunSuccess(array $expected, array $options): void
     {
         $this->task->setOptions($options);
         $result = $this->task->run();

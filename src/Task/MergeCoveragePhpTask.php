@@ -50,7 +50,7 @@ class MergeCoveragePhpTask extends BaseTask
         return $this;
     }
 
-    protected function getFilesFallback()
+    protected function getFilesFallback(): \Iterator
     {
         return $this->getFiles() ?: new \ArrayIterator([]);
     }

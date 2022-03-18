@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FooTest extends TestCase
 {
-    public function testDummy()
+    public function testDummy(): void
     {
         $this->assertTrue(true);
     }
