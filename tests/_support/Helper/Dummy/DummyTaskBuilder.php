@@ -11,6 +11,7 @@ use Robo\Common\TaskIO;
 use Robo\Contract\BuilderAwareInterface;
 use Robo\State\StateAwareTrait;
 use Robo\TaskAccessor;
+use Robo\Tasks as RoboTasks;
 use Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader;
 
 class DummyTaskBuilder implements BuilderAwareInterface, ContainerAwareInterface
@@ -21,13 +22,13 @@ class DummyTaskBuilder implements BuilderAwareInterface, ContainerAwareInterface
     use TaskIO;
 
     use PHPUnitTaskLoader {
-        taskPHPUnitCoverageReportHtmlTask as public;
-        taskPHPUnitCoverageReportXmlTask as public;
-        taskPHPUnitListGroupsTask as public;
-        taskPHPUnitListSuitesTask as public;
-        taskPHPUnitListTestsTask as public;
-        taskPHPUnitListTestsXmlTask as public;
-        taskPHPUnitMergeCoveragePhpTask as public;
+        taskPHPUnitCoverageReportHtml as public;
+        taskPHPUnitCoverageReportXml as public;
+        taskPHPUnitListGroups as public;
+        taskPHPUnitListSuites as public;
+        taskPHPUnitListTests as public;
+        taskPHPUnitListTestsXml as public;
+        taskPHPUnitMergeCoveragePhp as public;
         taskPHPUnitParseConfigurationXml as public;
         taskPHPUnitRun as public;
         taskPHPUnitTestCasesToCsv as public;
@@ -36,6 +37,8 @@ class DummyTaskBuilder implements BuilderAwareInterface, ContainerAwareInterface
 
     public function collectionBuilder(): CollectionBuilder
     {
-        return CollectionBuilder::create($this->getContainer(), null);
+        $commandFile = new RoboTasks();
+
+        return CollectionBuilder::create($this->getContainer(), $commandFile);
     }
 }

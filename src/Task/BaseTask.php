@@ -27,6 +27,9 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
 
     protected string $taskName = 'PHPUnit';
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $assets = [];
 
     protected int $processExitCode = 0;
@@ -35,14 +38,26 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
 
     protected string $processStdError = '';
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $phpdbgOutputParserResult = [];
 
     protected ?OutputParserInterface $outputParser = null;
 
-    protected string $outputParserClass = '';
+    /**
+     * @var null|class-string<\Sweetchuck\Robo\PHPUnit\OutputParserInterface>
+     */
+    protected ?string $outputParserClass = null;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $options = [];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $outputParserAssetNameMapping = [];
 
     public function __construct()
@@ -76,6 +91,9 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function expandOptions()
     {
         foreach (array_keys($this->options) as $optionName) {
@@ -92,6 +110,11 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         return $this;
     }
 
+    /**
+     * @param array<int, mixed> $arguments
+     *
+     * @return $this|mixed
+     */
     public function __call(string $name, array $arguments)
     {
         $matches = [];
@@ -130,6 +153,9 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         throw new \Exception("Action not supported: $name");
     }
 
+    /**
+     * @return null|array{action: string, optionName: string}
+     */
     protected function parseMethodName(string $methodName): ?array
     {
         $actions = [
@@ -162,6 +188,8 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
     }
 
     /**
+     * @param array<string, mixed> $options
+     *
      * @return $this
      */
     public function setOptions(array $options)
@@ -285,6 +313,9 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         return implode(PHP_EOL, $errorMessages);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getAssetsWithPrefixedNames(): array
     {
         $prefix = $this->getAssetNamePrefix();
@@ -306,28 +337,9 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
     }
 
     /**
-     * The array key is the relevant value and the array value will be a boolean.
+     * @param null|array<string, mixed> $context
      *
-     * @param string[]|bool[] $items
-     *   Items.
-     * @param bool $include
-     *   Default value.
-     *
-     * @return bool[]
-     *   Key is the relevant value, the value is a boolean.
-     */
-    protected function createIncludeList(array $items, bool $include): array
-    {
-        $item = reset($items);
-        if (gettype($item) !== 'boolean') {
-            $items = array_fill_keys($items, $include);
-        }
-
-        return $items;
-    }
-
-    /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
     protected function getTaskContext($context = null)
     {

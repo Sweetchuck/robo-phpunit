@@ -8,21 +8,34 @@ use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
 
 abstract class BaseCliTaskTestBase extends TaskTestBase
 {
+
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function casesGetCommand(): array;
 
     /**
+     * @param array<string, mixed> $options
+     *
      * @dataProvider casesGetCommand
      */
-    public function testGetCommand(string $expected, array $options)
+    public function testGetCommand(string $expected, array $options): void
     {
         $this->task->setOptions($options);
 
         $this->tester->assertEquals($expected, $this->task->getCommand());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function casesRunSuccess(): array;
 
     /**
+     * @param array<string, mixed> $expected
+     * @param dev-process-result-array $processProphecy
+     * @param array<string, mixed> $options
+     *
      * @dataProvider casesRunSuccess
      */
     public function testRunSuccess(array $expected, array $processProphecy, array $options = []): void

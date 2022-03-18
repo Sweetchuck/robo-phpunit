@@ -16,7 +16,7 @@ class ListTestsTaskTest extends BaseCliTaskTestBase
      */
     protected function initTask()
     {
-        $this->task = $this->taskBuilder->taskPHPUnitListTestsTask();
+        $this->task = $this->taskBuilder->taskPHPUnitListTests();
 
         return $this;
     }

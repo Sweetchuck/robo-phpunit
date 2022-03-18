@@ -9,6 +9,9 @@ use Sweetchuck\Robo\PHPUnit\OutputParserInterface;
 abstract class ParserBase implements OutputParserInterface
 {
 
+    /**
+     * @var array<string, string>
+     */
     protected array $assetNameMapping = [];
 
     public function getAssetNameMapping(): array

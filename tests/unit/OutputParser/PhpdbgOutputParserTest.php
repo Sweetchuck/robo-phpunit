@@ -4,14 +4,18 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
+use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\OutputParser\PhpdbgOutputParser;
 
 /**
  * @covers \Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser
  */
-class PhpdbgOutputParserTest extends \Codeception\Test\Unit
+class PhpdbgOutputParserTest extends Unit
 {
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesParse(): array
     {
         $color = "\x1b\[1;31m";
@@ -98,6 +102,8 @@ class PhpdbgOutputParserTest extends \Codeception\Test\Unit
     }
 
     /**
+     * @param array<string, mixed> $expected
+     *
      * @dataProvider casesParse
      */
     public function testParse(array $expected, int $exitCode, string $stdOutput, string $stdError): void

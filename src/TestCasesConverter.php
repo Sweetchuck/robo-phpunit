@@ -23,11 +23,15 @@ class TestCasesConverter
 
     /**
      * Plain list of file names.
+     *
+     * @param iterable<string> $bootstrapFiles
+     *
+     * @return array<int, string>
      */
     public function toFileNames(
         string $xmlString,
         string $fileNameRelativeTo = '',
-        array $bootstrapFiles = []
+        iterable $bootstrapFiles = []
     ): array {
         $this->requireFiles($bootstrapFiles);
 
@@ -35,9 +39,17 @@ class TestCasesConverter
         $xml->loadXML($xmlString);
         $xpath = new \DOMXPath($xml);
         $fileNames = [];
+
+        $list = $xpath->query('/tests/testCaseClass/@name');
+        if ($list === false) {
+            return $fileNames;
+        }
+
         /** @var \DOMAttr $classNameAttribute */
-        foreach ($xpath->query('/tests/testCaseClass/@name') as $classNameAttribute) {
-            $fileNames[] = $this->classNameToFileName($classNameAttribute->value, $fileNameRelativeTo);
+        foreach ($list as $classNameAttribute) {
+            /** @var class-string $className */
+            $className = $classNameAttribute->value;
+            $fileNames[] = $this->classNameToFileName($className, $fileNameRelativeTo);
         }
 
         return array_unique($fileNames);
@@ -48,13 +60,16 @@ class TestCasesConverter
      *
      * Every row contains information about a test method with data set.
      *
-     * @param bool[] $bootstrapFiles
+     * @param iterable<string> $bootstrapFiles
      *   Keys are column names.
+     * @param array<string, bool> $granularity
+     *
+     * @return array<int|string, test-case-row-array>
      */
     public function toArray(
         string $xmlString,
         string $fileNameRelativeTo = '',
-        array $bootstrapFiles = [],
+        iterable $bootstrapFiles = [],
         array $granularity = []
     ): array {
         $this->requireFiles($bootstrapFiles);
@@ -80,6 +95,7 @@ class TestCasesConverter
             $classFields = $this->parseTestCaseClassElement($class, $fileNameRelativeTo);
             /** @var \DOMElement $method */
             foreach ($class->getElementsByTagName('testCaseMethod') as $method) {
+                /** @phpstan-var test-case-row-array $row */
                 $row = array_replace(
                     $columns,
                     $classFields,
@@ -100,6 +116,13 @@ class TestCasesConverter
         return $rows;
     }
 
+    /**
+     * @param array<int, string> $bootstrapFiles
+     * @param array<string, bool> $granularity
+     * @param csv-options-array $csvOptions
+     *
+     * @return string
+     */
     public function toCsv(
         string $xmlString,
         string $fileNameRelativeTo = '',
@@ -115,6 +138,10 @@ class TestCasesConverter
         }
 
         $handler = fopen('php://memory', 'r+');
+        if ($handler === false) {
+            return '';
+        }
+
         if ($withHeader) {
             $row = (array) reset($rows);
             fputcsv($handler, array_keys($row), ...$csvOptions);
@@ -125,14 +152,18 @@ class TestCasesConverter
         }
 
         rewind($handler);
-        $csv = stream_get_contents($handler);
+        $csv = (string) stream_get_contents($handler);
         fclose($handler);
 
         return $csv;
     }
 
+    /**
+     * @return test-case-class-array
+     */
     protected function parseTestCaseClassElement(\DOMElement $class, string $fileNameRelativeTo): array
     {
+        /** @var class-string $name */
         $name = $class->getAttribute('name');
 
         return [
@@ -142,6 +173,9 @@ class TestCasesConverter
         ];
     }
 
+    /**
+     * @return test-case-method-array
+     */
     protected function parseTestCaseMethodElement(\DOMElement $method): array
     {
         $dataSet = $method->getAttribute('dataSet');
@@ -154,11 +188,18 @@ class TestCasesConverter
         ];
     }
 
+    /**
+     * @param class-string $class
+     * @param string $fileNameRelativeTo
+     *
+     * @return string
+     * @throws \ReflectionException
+     */
     public function classNameToFileName(string $class, string $fileNameRelativeTo): string
     {
         // @todo Error handling.
         $classReflection = new \ReflectionClass($class);
-        $fileName = $classReflection->getFileName();
+        $fileName = (string) $classReflection->getFileName();
 
         if ($fileNameRelativeTo === '') {
             return $fileName;
@@ -171,6 +212,11 @@ class TestCasesConverter
         );
     }
 
+    /**
+     * @param iterable<string> $files
+     *
+     * @return $this
+     */
     protected function requireFiles(iterable $files)
     {
         foreach ($files as $file) {

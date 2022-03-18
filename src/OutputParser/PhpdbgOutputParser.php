@@ -46,6 +46,9 @@ class PhpdbgOutputParser extends ParserBase
         return 0;
     }
 
+    /**
+     * @return array<string>
+     */
     protected function getErrorMessagePatterns(): array
     {
         return [

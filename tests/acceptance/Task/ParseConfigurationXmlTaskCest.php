@@ -16,6 +16,10 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ParseConfigurationXmlTaskCest
 {
+
+    /**
+     * @return array<string, dev-parse-xml-examples-array>
+     */
     protected function parseXmlExamples(): array
     {
         $fixturesDir = codecept_data_dir('fixtures');
@@ -39,7 +43,10 @@ class ParseConfigurationXmlTaskCest
             );
             $examples[$id] = [
                 'id' => $id,
-                'expected' => Yaml::parse(strtr(file_get_contents($expectedFileName), $replacements)),
+                'expected' => Yaml::parse(strtr(
+                    (string) file_get_contents($expectedFileName),
+                    $replacements,
+                )),
                 'args' => [
                     $phpUnitXmlFile->getPathname(),
                 ],
@@ -50,9 +57,11 @@ class ParseConfigurationXmlTaskCest
     }
 
     /**
+     * @param Example<dev-parse-xml-examples-array> $example
+     *
      * @dataProvider parseXmlExamples
      */
-    public function parseXml(AcceptanceTester $tester, Example $example)
+    public function parseXml(AcceptanceTester $tester, Example $example): void
     {
         $tester->runRoboTask(
             $example['id'],

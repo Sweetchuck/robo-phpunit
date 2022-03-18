@@ -35,6 +35,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     protected ?CommandBuilder $cmdBuilder = null;
 
+    /**
+     * @var array<string, int>
+     */
     protected array $optionGroupWeights = [
         'coverage' => 100,
         'coverageOther' => 200,
@@ -91,6 +94,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function initOptionsTestSelection()
     {
         return [
@@ -125,12 +131,17 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getEnvVars(): array
     {
         return $this->options['envVars']['value'];
     }
 
     /**
+     * @param array<string, string> $envVars
+     *
      * @return $this
      */
     public function setEnvVars(array $envVars)
@@ -151,6 +162,8 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     }
 
     /**
+     * @param array<string, string> $envVars
+     *
      * @return $this
      */
     public function addEnvVars(array $envVars)
@@ -173,6 +186,8 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
     }
 
     /**
+     * @param array<string> $names
+     *
      * @return $this
      */
     public function removeEnvVars(array $names)
@@ -229,6 +244,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function getCommandEnvironmentVariables()
     {
         foreach ($this->options['envVars']['value'] as $name => $value) {
@@ -282,6 +300,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function getCommandPhpunitArguments()
     {
         foreach (array_keys($this->options['arguments']['value'], true, true) as $argument) {
@@ -315,6 +336,9 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function runInitProcessRunCallbackWrapper()
     {
         $this->processRunCallbackWrapper = function (string $type, string $data): void {

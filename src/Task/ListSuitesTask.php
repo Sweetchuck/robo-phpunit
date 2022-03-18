@@ -10,7 +10,7 @@ class ListSuitesTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - List suites';
 
-    protected string $outputParserClass = ListOutputParser::class;
+    protected ?string $outputParserClass = ListOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.suitNames',

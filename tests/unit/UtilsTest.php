@@ -16,6 +16,9 @@ class UtilsTest extends Unit
 
     protected UnitTester $tester;
 
+    /**
+     * @return array<string, dev-delimit-test-case-array>
+     */
     public function casesDelimit(): array
     {
         return [

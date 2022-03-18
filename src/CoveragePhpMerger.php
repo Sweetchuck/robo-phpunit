@@ -35,6 +35,9 @@ class CoveragePhpMerger
         return $this->coverage;
     }
 
+    /**
+     * @return $this
+     */
     public function mergeFiles(\Iterator $files, OutputInterface $writer)
     {
         return $this
@@ -43,6 +46,9 @@ class CoveragePhpMerger
             ->finish($writer);
     }
 
+    /**
+     * @return $this
+     */
     public function start()
     {
         $this->startCoverage();
@@ -50,6 +56,9 @@ class CoveragePhpMerger
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function startCoverage()
     {
         $factory = $this->getCoverageDriverFactory() ?: new CoverageDriverFactory();
@@ -97,7 +106,7 @@ class CoveragePhpMerger
             },
             $filename,
         );
-        if (!is_object($coverage) || get_class($coverage) !== CodeCoverage::class) {
+        if (!is_object($coverage) || !($coverage instanceof CodeCoverage)) {
             throw new \RuntimeException("$filename doesn't return a valid " . CodeCoverage::class . ' object!');
         }
 
@@ -107,6 +116,9 @@ class CoveragePhpMerger
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function finish(OutputInterface $writer)
     {
         $reporter = new PhpReporter();
@@ -115,6 +127,9 @@ class CoveragePhpMerger
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function normalizeCoverage(CodeCoverage $coverage)
     {
         $tests = $coverage->getTests();

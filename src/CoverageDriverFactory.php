@@ -19,7 +19,7 @@ class CoverageDriverFactory
 {
 
     /**
-     * @var int[]
+     * @var array<string, int>
      */
     protected array $precedenceList = [
         'pcov' => 0,
@@ -28,7 +28,7 @@ class CoverageDriverFactory
     ];
 
     /**
-     * @return int[]
+     * @return array<string, int>
      */
     public function getPrecedenceList(): array
     {
@@ -72,7 +72,7 @@ class CoverageDriverFactory
         return $driver;
     }
 
-    public function createInstancePcov(Filter $filter)
+    public function createInstancePcov(Filter $filter): ?PcovDriver
     {
         if (!(new Runtime())->hasPCOV()) {
             return null;
@@ -85,13 +85,16 @@ class CoverageDriverFactory
         throw new \Exception('not supported phpunit version');
     }
 
+    /**
+     * @return null|\SebastianBergmann\CodeCoverage\Driver\Xdebug2Driver|\SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver
+     */
     public function createInstanceXdebug(Filter $filter)
     {
         if (!(new Runtime())->hasXdebug()) {
             return null;
         }
 
-        $xdebugVersion = phpversion('xdebug');
+        $xdebugVersion = phpversion('xdebug') ?: '3.0.0';
         $driver = version_compare($xdebugVersion, '3', '>=') ?
             new Xdebug3Driver($filter)
             : new Xdebug2Driver($filter);
@@ -101,7 +104,7 @@ class CoverageDriverFactory
         return $driver;
     }
 
-    public function createInstancePhpdbg()
+    public function createInstancePhpdbg(): ?PhpdbgDriver
     {
         if (!(new Runtime())->hasPHPDBGCodeCoverage()) {
             return null;

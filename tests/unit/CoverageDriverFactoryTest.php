@@ -19,6 +19,9 @@ class CoverageDriverFactoryTest extends Unit
 
     protected UnitTester $tester;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesCreateInstance(): array
     {
         return [
@@ -42,6 +45,8 @@ class CoverageDriverFactoryTest extends Unit
     }
 
     /**
+     * @param array<string, int> $precedenceList
+     *
      * @dataProvider casesCreateInstance
      */
     public function testCreateInstance(string $expected, array $precedenceList): void

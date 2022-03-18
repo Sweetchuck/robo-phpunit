@@ -21,6 +21,9 @@ class TestCasesConverterTest extends Unit
         return dirname(__DIR__, 2);
     }
 
+    /**
+     * @return array<string, dev-to-file-names-success-case-array>
+     */
     public function casesToFileNamesSuccess(): array
     {
         $selfProjectRoot = $this->selfProjectRoot();
@@ -51,14 +54,19 @@ class TestCasesConverterTest extends Unit
 
     /**
      * @dataProvider casesToFileNamesSuccess
+     *
+     * @param array<string> $expected
      */
-    public function testToFileNamesSuccess(array $expected, string $xmlString, $fileNameRelativeTo)
+    public function testToFileNamesSuccess(array $expected, string $xmlString, string $fileNameRelativeTo): void
     {
         $converter = new TestCasesConverter();
 
         $this->tester->assertSame($expected, $converter->toFileNames($xmlString, $fileNameRelativeTo));
     }
 
+    /**
+     * @return array<string, dev-to-csv-test-case-array>
+     */
     public function casesToCsv(): array
     {
         $xmlStringReal = implode("\n", [
@@ -120,8 +128,10 @@ class TestCasesConverterTest extends Unit
 
     /**
      * @dataProvider casesToCsv
+     *
+     * @param dev-to-csv-args-array $args
      */
-    public function testToCsv(string $excepted, array $args)
+    public function testToCsv(string $excepted, array $args): void
     {
         $converter = new TestCasesConverter();
         $this->tester->assertSame($excepted, $converter->toCsv(...$args));

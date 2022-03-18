@@ -25,7 +25,7 @@ class RoboFile extends \Robo\Tasks
     {
         return $this
             ->collectionBuilder()
-            ->addTask($this->taskPHPUnitListGroupsTask())
+            ->addTask($this->taskPHPUnitListGroups())
             ->addCode(function (\Robo\State\Data $data): int {
                 $output = $this->output();
                 foreach ($data['phpunit.groupNames'] as $groupName) {

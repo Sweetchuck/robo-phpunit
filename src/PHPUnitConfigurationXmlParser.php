@@ -14,8 +14,14 @@ class PHPUnitConfigurationXmlParser
 
     protected \DOMXPath $xpath;
 
+    /**
+     * @var phpunit-cofiguration-array
+     */
     protected array $phpunit = [];
 
+    /**
+     * @return phpunit-cofiguration-array
+     */
     public function parse(string $content, string $baseDir = ''): array
     {
         return $this
@@ -50,6 +56,10 @@ class PHPUnitConfigurationXmlParser
     protected function parseLogging()
     {
         $logs = $this->xpath->query('/phpunit/logging/*[@target or @outputFile or @outputDirectory]');
+        if ($logs === false) {
+            return $this;
+        }
+
         /** @var \DOMElement $log */
         foreach ($logs as $log) {
             $type = $log->hasAttribute('type') ? $log->getAttribute('type') : $log->tagName;
@@ -62,9 +72,16 @@ class PHPUnitConfigurationXmlParser
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function parseCoverage()
     {
         $logs = $this->xpath->query('/phpunit/coverage/report/*[@outputFile or @outputDirectory]');
+        if ($logs === false) {
+            return $this;
+        }
+
         /** @var \DOMElement $log */
         foreach ($logs as $log) {
             $type = 'coverage-' . $log->tagName;
@@ -75,6 +92,9 @@ class PHPUnitConfigurationXmlParser
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function addItemToLogging(string $type, string $path)
     {
         $fileLoggingTypes = $this->getFileLoggingTypes();
@@ -95,6 +115,9 @@ class PHPUnitConfigurationXmlParser
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     protected function getFileLoggingTypes(): array
     {
         return [

@@ -1,0 +1,233 @@
+parameters:
+    typeAliases:
+        test-case-method-array: '''
+            array{
+                method: string,
+                dataSet: string,
+                dataSetRegexSafe: string,
+                groups: string,
+            }
+        '''
+        test-case-class-array: '''
+            array{
+                file: string,
+                class: class-string,
+                classRegexSafe: string,
+            }
+        '''
+        test-case-row-array: '''
+            array{
+                file: string,
+                class: class-string,
+                classRegexSafe: string,
+                method: string,
+                dataSet: string,
+                dataSetRegexSafe: string,
+                groups: string,
+            }
+        '''
+        csv-options-array: '''
+            array{
+                0?: string,
+                1?: string,
+                2?: string,
+            }
+        '''
+        task-phpunit-test-cases-to-filenames-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                xmlFile?: string,
+                fileNameRelativeTo?: string,
+                bootstrapFiles?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-test-cases-to-csv-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                xmlFile?: string,
+                fileNameRelativeTo?: string,
+                bootstrapFiles?: array<string, bool>|array<string>,
+                granularity?: array<string, bool>|array<string>,
+                withHeader?: bool,
+                csvOptions?: csv-options-array,
+            }
+        '''
+        task-phpunit-run-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                hideStdOutput?: bool,
+                processTimeout?: int,
+                envVars?: array<string, string>,
+                phpExecutable?: string,
+                phpunitExecutable?: string,
+                configuration?: null|string,
+                noConfiguration?: bool,
+                arguments?: array<string, bool>|array<string>,
+                coverageClover?: null|string,
+                coverageCrap4j?: null|string,
+                coverageHtml?: null|string,
+                coveragePhp?: null|string,
+                coverageText?: null|string,
+                coverageXml?: null|string,
+                whitelist?: null|string,
+                disableCoverageIgnore?: bool,
+                logJunit?: null|string,
+                logTeamCity?: null|string,
+                testdoxHtml?: null|string,
+                testdoxText?: null|string,
+                testdoxXml?: null|string,
+                reverseList?: bool,
+                filter?: array<string, bool>|array<string>,
+                testSuite?: array<string, bool>|array<string>,
+                group?: array<string, bool>|array<string>,
+                excludeGroup?: array<string, bool>|array<string>,
+                testSuffix?: array<string, bool>|array<string>,
+                doNotReportUselessTests?: bool,
+                strictCoverage?: bool,
+                strictGlobalState?: bool,
+                disallowTestOutput?: bool,
+                disallowResourceUsage?: bool,
+                enforceTimeLimit?: bool,
+                disallowTodoTests?: bool,
+                processIsolation?: bool,
+                globalsBackup?: bool,
+                staticBackup?: bool,
+                colors?: null|string,
+                columns?: null|int,
+                stderr?: bool,
+                stopOnError?: bool,
+                stopOnFailure?: bool,
+                stopOnWarning?: bool,
+                stopOnRisky?: bool,
+                stopOnSkipped?: bool,
+                stopOnIncomplete?: bool,
+                failOnWarning?: bool,
+                failOnRisky?: bool,
+                verbose?: bool,
+                debug?: bool,
+                loader?: null|string,
+                repeat?: null|int,
+                teamCity?: bool,
+                testdox?: bool,
+                testdoxGroup?: array<string, bool>|array<string>,
+                testdoxExcludeGroup?: array<string, bool>|array<string>,
+                printer?: null|string,
+                bootstrap?: null|string,
+                noCoverage?: bool,
+                noLogging?: bool,
+                noExtensions?: bool,
+                includePath?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-parse-configuration-xml-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                xmlFile?: string,
+            }
+        '''
+        task-phpunit-merge-coverage-php-task-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                files?: \Iterator,
+                merger?: null|\Sweetchuck\Robo\PHPUnit\CoveragePhpMerger,
+                writer?: null|\Symfony\Component\Console\Output\OutputInterface,
+            }
+        '''
+        task-phpunit-list-tests-xml-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                hideStdOutput?: bool,
+                processTimeout?: int,
+                envVars?: array<string, string>,
+                phpExecutable?: string,
+                phpunitExecutable?: string,
+                configuration?: null|string,
+                noConfiguration?: bool,
+                arguments?: array<string, bool>|array<string>,
+                testSuite?: array<string, bool>|array<string>,
+                group?: array<string, bool>|array<string>,
+                excludeGroup?: array<string, bool>|array<string>,
+                covers?: null|string,
+                uses?: null|string,
+                filter?: array<string, bool>|array<string>,
+                testSuffix?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-list-tests-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                hideStdOutput?: bool,
+                processTimeout?: int,
+                envVars?: array<string, string>,
+                phpExecutable?: string,
+                phpunitExecutable?: string,
+                configuration?: null|string,
+                noConfiguration?: bool,
+                arguments?: array<string, bool>|array<string>,
+                testSuite?: array<string, bool>|array<string>,
+                group?: array<string, bool>|array<string>,
+                excludeGroup?: array<string, bool>|array<string>,
+                covers?: null|string,
+                uses?: null|string,
+                filter?: array<string, bool>|array<string>,
+                testSuffix?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-list-suites-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                hideStdOutput?: bool,
+                processTimeout?: int,
+                envVars?: array<string, string>,
+                phpExecutable?: string,
+                phpunitExecutable?: string,
+                configuration?: null|string,
+                noConfiguration?: bool,
+                arguments?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-list-groups-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                hideStdOutput?: bool,
+                processTimeout?: int,
+                envVars?: array<string, string>,
+                phpExecutable?: string,
+                phpunitExecutable?: string,
+                configuration?: null|string,
+                noConfiguration?: bool,
+                arguments?: array<string, bool>|array<string>,
+            }
+        '''
+        task-phpunit-coverage-report-xml-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                coverage?: null|\SebastianBergmann\CodeCoverage\CodeCoverage,
+                reporter?: null|\SebastianBergmann\CodeCoverage\Report\Clover,
+                dstFile?: null|string,
+            }
+        '''
+        task-phpunit-coverage-report-html-options: '''
+            array{
+                workingDirectory?: string,
+                assetNamePrefix?: string,
+                coverage?: null|\SebastianBergmann\CodeCoverage\CodeCoverage,
+                reporter?: null|\SebastianBergmann\CodeCoverage\Report\Clover,
+            }
+        '''
+        phpunit-cofiguration-array: '''
+            array{
+                logging?: array<string, mixed>,
+                "logging.directories"?: array<string, mixed>,
+            }
+        '''

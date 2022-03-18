@@ -24,7 +24,7 @@ class RunTaskTest extends BaseCliTaskTestBase
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
     public function casesGetCommand(): array
     {
@@ -414,6 +414,11 @@ class RunTaskTest extends BaseCliTaskTestBase
         ];
     }
 
+    /**
+     * @param array<int, mixed> $values
+     *
+     * @return array<int, mixed>
+     */
     protected function casesGetCommandBuild(array $values): array
     {
         $args = [[], []];
@@ -427,7 +432,7 @@ class RunTaskTest extends BaseCliTaskTestBase
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, mixed>
      */
     public function casesRunSuccess(): array
     {
@@ -470,7 +475,7 @@ class RunTaskTest extends BaseCliTaskTestBase
         $this->task->removeEnvVars(['a', 'g']);
         $this->tester->assertSame(
             ['c' => 'd'],
-            $this->task->getEnvVars()
+            $this->task->getEnvVars(),
         );
     }
 }

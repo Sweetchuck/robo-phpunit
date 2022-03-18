@@ -12,6 +12,9 @@ use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 class ListOutputParserTest extends \Codeception\Test\Unit
 {
 
+    /**
+     * @return array<string, mixed>
+     */
     public function casesParse(): array
     {
         return [
@@ -53,6 +56,8 @@ class ListOutputParserTest extends \Codeception\Test\Unit
     }
 
     /**
+     * @param array<string, mixed> $expected
+     *
      * @dataProvider casesParse
      */
     public function testParse(array $expected, int $exitCode, string $stdOutput, string $stdError): void

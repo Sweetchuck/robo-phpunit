@@ -6,10 +6,12 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Codeception\Test\Unit;
 use League\Container\Container as LeagueContainer;
+use Psr\Container\ContainerInterface;
 use Robo\Collection\CollectionBuilder;
 use Robo\Config\Config;
 use Robo\Config\Config as RoboConfig;
 use Robo\Robo;
+use Robo\Tasks as RoboTasks;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcessHelper;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\Dummy\DummyTaskBuilder;
@@ -20,10 +22,7 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
 
 abstract class TaskTestBase extends Unit
 {
-    /**
-     * @var \League\Container\ContainerInterface
-     */
-    protected $container;
+    protected ContainerInterface $container;
 
     protected RoboConfig $config;
 
@@ -32,7 +31,7 @@ abstract class TaskTestBase extends Unit
     protected UnitTester $tester;
 
     /**
-     * @var \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
+     * @phpstan-var \Sweetchuck\Robo\PHPUnit\Task\BaseTask&\Robo\Collection\CollectionBuilder
      */
     protected $task;
 
@@ -44,7 +43,8 @@ abstract class TaskTestBase extends Unit
     }
 
     /**
-     * @inheritdoc
+     * @retrun void
+     * @phpstan-return void
      */
     public function _before()
     {
@@ -67,7 +67,8 @@ abstract class TaskTestBase extends Unit
         Robo::configureContainer($this->container, $application, $this->config, $input, $output);
         $this->container->add('logger', BufferingLogger::class);
 
-        $this->builder = CollectionBuilder::create($this->container, null);
+        $commandFile = new RoboTasks();
+        $this->builder = CollectionBuilder::create($this->container, $commandFile);
         $this->taskBuilder = new DummyTaskBuilder();
         $this->taskBuilder->setContainer($this->container);
         $this->taskBuilder->setBuilder($this->builder);
