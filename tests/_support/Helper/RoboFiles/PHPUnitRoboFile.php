@@ -10,7 +10,7 @@ use Robo\Tasks;
 use Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader;
 use Robo\State\Data as RoboStateData;
 use Symfony\Component\Yaml\Yaml;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class PHPUnitRoboFile extends Tasks
 {

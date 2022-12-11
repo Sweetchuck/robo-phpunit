@@ -1,13 +1,12 @@
 
-/bin/
 /vendor/
 
 /tests/_log/
 /tests/_support/_generated/
 /tests/*.suite.yml
+/codeception.yml
 
 /.git-hooks.local
-/codeception.yml
 
 /phpstan.neon
 

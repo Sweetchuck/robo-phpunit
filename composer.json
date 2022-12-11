@@ -43,7 +43,7 @@
         "phpunit/phpunit": "^9.5",
         "sweetchuck/cli-cmd-builder": "^0.0",
         "sweetchuck/utils": "1.x-dev",
-        "symfony/console": "^4.4 || ^5.0"
+        "symfony/console": "^4.4 || ^5.0 || ^6.0"
     },
     "require-dev": {
         "ext-json": "*",
@@ -57,11 +57,11 @@
         "sweetchuck/robo-git": "2.x-dev",
         "sweetchuck/robo-phpcs": "2.x-dev",
         "sweetchuck/robo-phpstan": "1.x-dev",
-        "symfony/debug": "^4.4 || ^5.0",
-        "symfony/error-handler": "^4.4 || ^5.0",
-        "symfony/finder": "^4.0 || ^5.0",
-        "symfony/service-contracts": "^2.0",
-        "webmozart/path-util": "^2.3"
+        "symfony/debug": "^4.4 || ^5.0 || ^6.0",
+        "symfony/error-handler": "^4.4 || ^5.0 || ^6.0",
+        "symfony/filesystem": "^5.0 || ^6.0 || ^6.0",
+        "symfony/finder": "^4.0 || ^5.0 || ^6.0",
+        "symfony/service-contracts": "^2.0 || ^3.0"
     },
     "suggest": {
         "phpunit/phpunit": "The 'phpunit' executable is required."

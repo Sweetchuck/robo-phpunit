@@ -6,7 +6,7 @@ namespace Sweetchuck\Robo\PHPUnit\Task;
 
 use Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser;
 use Sweetchuck\Robo\PHPUnit\Utils;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ParseConfigurationXmlTask extends BaseTask
 {
