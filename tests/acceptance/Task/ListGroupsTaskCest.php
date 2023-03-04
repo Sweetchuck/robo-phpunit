@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Acceptance\Task;
 
+use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 use Sweetchuck\Robo\PHPUnit\Test\AcceptanceTester;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
@@ -56,9 +57,8 @@ class ListGroupsTaskCest
 
     /**
      * @param \Codeception\Example<dev-list-suites-examples-array> $example
-     *
-     * @dataProvider listGroupsExamples
      */
+    #[DataProvider('listGroupsExamples')]
     public function listGroups(AcceptanceTester $tester, Example $example): void
     {
         $tester->runRoboTask(

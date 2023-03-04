@@ -4,21 +4,19 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask;
+
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask<extended>
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
  */
 class ListTestsXmlTaskTest extends BaseCliTaskTestBase
 {
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initTask()
+    protected function createTaskInstance(): ListTestsXmlTask
     {
-        $this->task = $this->taskBuilder->taskPHPUnitListTestsXml();
-
-        return $this;
+        return new ListTestsXmlTask();
     }
 
     /**

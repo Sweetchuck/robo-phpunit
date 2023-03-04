@@ -4,10 +4,17 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use Codeception\Attribute\DataProvider;
 use Sweetchuck\Codeception\Module\RoboTaskRunner\DummyProcess;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
 
+/**
+ * @method BaseCliTask createTask()
+ */
 abstract class BaseCliTaskTestBase extends TaskTestBase
 {
+
+    abstract protected function createTaskInstance(): BaseCliTask;
 
     /**
      * @return array<string, mixed>
@@ -16,14 +23,14 @@ abstract class BaseCliTaskTestBase extends TaskTestBase
 
     /**
      * @param array<string, mixed> $options
-     *
-     * @dataProvider casesGetCommand
      */
+    #[DataProvider('casesGetCommand')]
     public function testGetCommand(string $expected, array $options): void
     {
-        $this->task->setOptions($options);
+        $task = $this->createTask();
+        $task->setOptions($options);
 
-        $this->tester->assertEquals($expected, $this->task->getCommand());
+        $this->tester->assertSame($expected, $task->getCommand());
     }
 
     /**
@@ -35,15 +42,14 @@ abstract class BaseCliTaskTestBase extends TaskTestBase
      * @param array<string, mixed> $expected
      * @param dev-process-result-array $processProphecy
      * @param array<string, mixed> $options
-     *
-     * @dataProvider casesRunSuccess
      */
+    #[DataProvider('casesRunSuccess')]
     public function testRunSuccess(array $expected, array $processProphecy, array $options = []): void
     {
-        $instanceIndex = count(DummyProcess::$instances);
-        DummyProcess::$prophecy[$instanceIndex] = $processProphecy;
+        DummyProcess::$prophecy[] = $processProphecy;
 
-        $result = $this->task
+        $task = $this->createTask();
+        $result = $task
             ->setOptions($options)
             ->run();
 

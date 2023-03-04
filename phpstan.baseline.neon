@@ -59,9 +59,3 @@ parameters:
 			message: "#^PHPDoc tag @var for variable \\$task contains unresolvable type\\.$#"
 			count: 10
 			path: tests/_support/Helper/RoboFiles/PHPUnitRoboFile.php
-
-		-
-			message: "#^PHPDoc tag @var for property Sweetchuck\\\\Robo\\\\PHPUnit\\\\Test\\\\Unit\\\\Task\\\\TaskTestBase\\:\\:\\$task contains unresolvable type\\.$#"
-			count: 1
-			path: tests/unit/Task/TaskTestBase.php
-

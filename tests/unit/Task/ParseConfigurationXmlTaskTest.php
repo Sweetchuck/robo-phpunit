@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use Codeception\Attribute\DataProvider;
+use Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask;
+
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask<extended>
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
  */
 class ParseConfigurationXmlTaskTest extends TaskTestBase
 {
-    protected function initTask()
+    protected function createTaskInstance(): ParseConfigurationXmlTask
     {
-        $this->task = $this->taskBuilder->taskPHPUnitParseConfigurationXml();
-
-        return $this;
+        return new ParseConfigurationXmlTask();
     }
 
     /**
@@ -66,13 +67,13 @@ class ParseConfigurationXmlTaskTest extends TaskTestBase
     /**
      * @param array<string, mixed> $expected
      * @param array<string, mixed> $options
-     *
-     * @dataProvider casesRunSuccess
      */
+    #[DataProvider('casesRunSuccess')]
     public function testRunSuccess(array $expected, array $options): void
     {
-        $this->task->setOptions($options);
-        $result = $this->task->run();
+        $task = $this->createTask();
+        $task->setOptions($options);
+        $result = $task->run();
 
         if (array_key_exists('assets', $expected)) {
             $assets = $result->getData();

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Acceptance\Task;
 
+use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 use Sweetchuck\Robo\PHPUnit\Test\AcceptanceTester;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
@@ -58,9 +59,8 @@ class ParseConfigurationXmlTaskCest
 
     /**
      * @param Example<dev-parse-xml-examples-array> $example
-     *
-     * @dataProvider parseXmlExamples
      */
+    #[DataProvider('parseXmlExamples')]
     public function parseXml(AcceptanceTester $tester, Example $example): void
     {
         $tester->runRoboTask(

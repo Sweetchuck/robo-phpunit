@@ -1,6 +1,5 @@
-
-class_name: UnitTester
+actor: 'UnitTester'
 modules:
     enabled:
-        - Asserts
-        - \Sweetchuck\Robo\PHPUnit\Test\Helper\Unit
+        - 'Asserts'
+        - '\Sweetchuck\Robo\PHPUnit\Test\Helper\Unit'

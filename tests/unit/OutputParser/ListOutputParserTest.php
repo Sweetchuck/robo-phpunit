@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
+use Codeception\Attribute\DataProvider;
 use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 
 /**
@@ -57,9 +58,8 @@ class ListOutputParserTest extends \Codeception\Test\Unit
 
     /**
      * @param array<string, mixed> $expected
-     *
-     * @dataProvider casesParse
      */
+    #[DataProvider('casesParse')]
     public function testParse(array $expected, int $exitCode, string $stdOutput, string $stdError): void
     {
         $parser = new ListOutputParser();

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
+use Codeception\Attribute\DataProvider;
 use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser;
 
@@ -85,9 +86,8 @@ class PHPUnitConfigurationXmlParserTest extends Unit
 
     /**
      * @param array<string, mixed> $expected
-     *
-     * @dataProvider casesParse
      */
+    #[DataProvider('casesParse')]
     public function testParse(array $expected, string $xmlString, string $baseDir = ''): void
     {
         $parser = new PHPUnitConfigurationXmlParser();

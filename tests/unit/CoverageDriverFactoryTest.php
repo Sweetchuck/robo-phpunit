@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
+use Codeception\Attribute\DataProvider;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
@@ -49,6 +50,7 @@ class CoverageDriverFactoryTest extends Unit
      *
      * @dataProvider casesCreateInstance
      */
+    #[DataProvider('casesCreateInstance')]
     public function testCreateInstance(string $expected, array $precedenceList): void
     {
         $filter = new CodeCoverageFilter();

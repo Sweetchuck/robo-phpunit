@@ -5,22 +5,21 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Sweetchuck\CliCmdBuilder\CommandBuilder;
+use Sweetchuck\Robo\PHPUnit\Task\RunTask;
 
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\RunTask<extended>
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\RunTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
+ *
+ * @method \Sweetchuck\Robo\PHPUnit\Task\RunTask createTask()
  */
 class RunTaskTest extends BaseCliTaskTestBase
 {
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initTask()
+    protected function createTaskInstance(): RunTask
     {
-        $this->task = $this->taskBuilder->taskPHPUnitRun();
-
-        return $this;
+        return new RunTask();
     }
 
     /**
@@ -452,30 +451,31 @@ class RunTaskTest extends BaseCliTaskTestBase
 
     public function testGetSetEnvVars(): void
     {
-        $this->tester->assertSame([], $this->task->getEnvVars());
+        $task = $this->createTask();
+        $this->tester->assertSame([], $task->getEnvVars());
 
-        $this->task->setEnvVars(['a' => 'b']);
-        $this->tester->assertSame(['a' => 'b'], $this->task->getEnvVars());
+        $task->setEnvVars(['a' => 'b']);
+        $this->tester->assertSame(['a' => 'b'], $task->getEnvVars());
 
-        $this->task->addEnvVar('c', 'd');
-        $this->tester->assertSame(['a' => 'b', 'c' => 'd'], $this->task->getEnvVars());
+        $task->addEnvVar('c', 'd');
+        $this->tester->assertSame(['a' => 'b', 'c' => 'd'], $task->getEnvVars());
 
-        $this->task->addEnvVars(['e' => 'f', 'g' => 'h']);
+        $task->addEnvVars(['e' => 'f', 'g' => 'h']);
         $this->tester->assertSame(
             ['a' => 'b', 'c' => 'd', 'e' => 'f', 'g' => 'h'],
-            $this->task->getEnvVars()
+            $task->getEnvVars()
         );
 
-        $this->task->removeEnvVar('e');
+        $task->removeEnvVar('e');
         $this->tester->assertSame(
             ['a' => 'b', 'c' => 'd', 'g' => 'h'],
-            $this->task->getEnvVars()
+            $task->getEnvVars()
         );
 
-        $this->task->removeEnvVars(['a', 'g']);
+        $task->removeEnvVars(['a', 'g']);
         $this->tester->assertSame(
             ['c' => 'd'],
-            $this->task->getEnvVars(),
+            $task->getEnvVars(),
         );
     }
 }

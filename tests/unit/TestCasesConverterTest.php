@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
+use Codeception\Attribute\DataProvider;
 use Sweetchuck\Robo\PHPUnit\TestCasesConverter;
 use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
@@ -53,10 +54,9 @@ class TestCasesConverterTest extends Unit
     }
 
     /**
-     * @dataProvider casesToFileNamesSuccess
-     *
      * @param array<string> $expected
      */
+    #[DataProvider('casesToFileNamesSuccess')]
     public function testToFileNamesSuccess(array $expected, string $xmlString, string $fileNameRelativeTo): void
     {
         $converter = new TestCasesConverter();
@@ -127,10 +127,9 @@ class TestCasesConverterTest extends Unit
     }
 
     /**
-     * @dataProvider casesToCsv
-     *
      * @param dev-to-csv-args-array $args
      */
+    #[DataProvider('casesToCsv')]
     public function testToCsv(string $excepted, array $args): void
     {
         $converter = new TestCasesConverter();
