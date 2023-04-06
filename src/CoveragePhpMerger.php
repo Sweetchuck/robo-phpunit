@@ -20,10 +20,7 @@ class CoveragePhpMerger
         return $this->coverageDriverFactory;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCoverageDriverFactory(?CoverageDriverFactory $coverageDriverFactory)
+    public function setCoverageDriverFactory(?CoverageDriverFactory $coverageDriverFactory): static
     {
         $this->coverageDriverFactory = $coverageDriverFactory;
 
@@ -35,10 +32,7 @@ class CoveragePhpMerger
         return $this->coverage;
     }
 
-    /**
-     * @return $this
-     */
-    public function mergeFiles(\Iterator $files, OutputInterface $writer)
+    public function mergeFiles(\Iterator $files, OutputInterface $writer): static
     {
         return $this
             ->start()
@@ -46,20 +40,14 @@ class CoveragePhpMerger
             ->finish($writer);
     }
 
-    /**
-     * @return $this
-     */
-    public function start()
+    public function start(): static
     {
         $this->startCoverage();
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function startCoverage()
+    protected function startCoverage(): static
     {
         $factory = $this->getCoverageDriverFactory() ?: new CoverageDriverFactory();
         $filter = new CodeCoverageFilter();
@@ -69,10 +57,7 @@ class CoveragePhpMerger
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addFiles(\Iterator $files)
+    public function addFiles(\Iterator $files): static
     {
         while ($files->valid()) {
             $this->addFile($files->current());
@@ -84,10 +69,8 @@ class CoveragePhpMerger
 
     /**
      * @param string|\SplFileInfo $file
-     *
-     * @return $this
      */
-    public function addFile($file)
+    public function addFile($file): static
     {
         $filename = $file instanceof \SplFileInfo ? $file->getPathname() : rtrim($file, "\r\n");
         $filename = preg_replace(
@@ -116,10 +99,7 @@ class CoveragePhpMerger
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function finish(OutputInterface $writer)
+    public function finish(OutputInterface $writer): static
     {
         $reporter = new PhpReporter();
         $writer->write($reporter->process($this->coverage));
@@ -127,10 +107,7 @@ class CoveragePhpMerger
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function normalizeCoverage(CodeCoverage $coverage)
+    protected function normalizeCoverage(CodeCoverage $coverage): static
     {
         $tests = $coverage->getTests();
         foreach ($tests as &$test) {

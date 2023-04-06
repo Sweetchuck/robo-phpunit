@@ -31,10 +31,7 @@ class PHPUnitConfigurationXmlParser
             ->phpunit;
     }
 
-    /**
-     * @return $this
-     */
-    protected function init(string $content, string $baseDir)
+    protected function init(string $content, string $baseDir): static
     {
         $this->baseDir = $baseDir ?: '.';
         $this->phpunit = [
@@ -50,10 +47,8 @@ class PHPUnitConfigurationXmlParser
 
     /**
      * @todo Support for every kind of logging.
-     *
-     * @return $this
      */
-    protected function parseLogging()
+    protected function parseLogging(): static
     {
         $logs = $this->xpath->query('/phpunit/logging/*[@target or @outputFile or @outputDirectory]');
         if ($logs === false) {
@@ -72,10 +67,7 @@ class PHPUnitConfigurationXmlParser
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function parseCoverage()
+    protected function parseCoverage(): static
     {
         $logs = $this->xpath->query('/phpunit/coverage/report/*[@outputFile or @outputDirectory]');
         if ($logs === false) {
@@ -92,10 +84,7 @@ class PHPUnitConfigurationXmlParser
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function addItemToLogging(string $type, string $path)
+    protected function addItemToLogging(string $type, string $path): static
     {
         $fileLoggingTypes = $this->getFileLoggingTypes();
         $this->phpunit['logging'][$type] = $path;

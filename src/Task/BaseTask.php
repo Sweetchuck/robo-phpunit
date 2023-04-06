@@ -72,10 +72,7 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         return $this->taskName;
     }
 
-    /**
-     * @return $this
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         $this->options = [
             'workingDirectory' => [
@@ -91,10 +88,7 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function expandOptions()
+    protected function expandOptions(): static
     {
         foreach (array_keys($this->options) as $optionName) {
             $this->options[$optionName]['name'] = $optionName;
@@ -112,10 +106,8 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
 
     /**
      * @param array<int, mixed> $arguments
-     *
-     * @return $this|mixed
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         $matches = [];
         if (!preg_match('/^(?P<action>get|set)[A-Z]/u', $name, $matches)) {
@@ -189,10 +181,8 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
 
     /**
      * @param array<string, mixed> $options
-     *
-     * @return $this
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): static
     {
         foreach ($options as $optionName => $value) {
             if (!isset($this->options[$optionName])) {
@@ -228,43 +218,28 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
             ->runReturn();
     }
 
-    /**
-     * @return $this
-     */
-    protected function runInit()
+    protected function runInit(): static
     {
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function runHeader()
+    protected function runHeader(): static
     {
         $this->printTaskInfo('is working');
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    abstract protected function runDoIt();
+    abstract protected function runDoIt(): static;
 
-    /**
-     * @return $this
-     */
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         $this->assets = [];
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function runProcessOutputs()
+    protected function runProcessOutputs(): static
     {
         $phpdbgOutputParser = new PhpdbgOutputParser();
         $this->phpdbgOutputParserResult = $phpdbgOutputParser->parse(

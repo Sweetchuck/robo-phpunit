@@ -22,10 +22,7 @@ class TestCasesToFileNamesTask extends BaseTask
 {
     protected string $taskName = 'PHPUnit - Test cases to file names';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -46,7 +43,7 @@ class TestCasesToFileNamesTask extends BaseTask
         return $this;
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $xmlString = Utils::getXmlString(
             $this->getXmlFile(),
@@ -64,12 +61,12 @@ class TestCasesToFileNamesTask extends BaseTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         return $this;
     }
 
-    protected function runProcessOutputs()
+    protected function runProcessOutputs(): static
     {
         return $this;
     }

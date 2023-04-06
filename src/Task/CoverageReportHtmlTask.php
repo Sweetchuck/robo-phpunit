@@ -6,6 +6,7 @@ namespace Sweetchuck\Robo\PHPUnit\Task;
 
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlReporter;
+use Sweetchuck\Robo\PHPUnit\Utils;
 
 /**
  * @method null|\SebastianBergmann\CodeCoverage\CodeCoverage getCoverage()
@@ -21,10 +22,7 @@ class CoverageReportHtmlTask extends BaseTask
 
     protected ?CodeCoverage $coverage = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -48,15 +46,19 @@ class CoverageReportHtmlTask extends BaseTask
 
     protected function getReporterDefault(): HtmlReporter
     {
-        // @todo Configurable.
-        $lowUpperBound = 50;
-        $highLowerBound = 90;
-        $generator = '';
+        if (Utils::phpunitVersionMajor() === 9) {
+            // @todo Configurable.
+            $lowUpperBound = 50;
+            $highLowerBound = 90;
+            $generator = '';
 
-        return new HtmlReporter($lowUpperBound, $highLowerBound, $generator);
+            return new HtmlReporter($lowUpperBound, $highLowerBound, $generator);
+        }
+
+        return new HtmlReporter();
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $reporter = $this->getReporterFallback();
         $reporter->process($this->getCoverage(), $this->getWorkingDirectory());

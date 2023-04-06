@@ -1,0 +1,96 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\:\\:setAssetNamePrefix\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Robo\\\\Task\\\\Filesystem\\\\FilesystemStack\\:\\:mkdir\\(\\)\\.$#"
+			count: 4
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitListStagedFilesTask\\:\\:setPaths\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:setCommandOnly\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Robo\\\\Collection\\\\CollectionBuilder\\|Sweetchuck\\\\Robo\\\\Phpstan\\\\Task\\\\AnalyzeTask\\:\\:setNoProgress\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to an undefined method Sweetchuck\\\\Robo\\\\Git\\\\Task\\\\GitReadStagedFilesTask\\:\\:deferTaskConfiguration\\(\\)\\.$#"
+			count: 1
+			path: ../RoboFile.php
+
+		-
+			message: "#^Call to method enableDeadCodeDetection\\(\\) on an unknown class SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug2Driver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Call to method enableDeadCodeDetection\\(\\) on an unknown class SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug3Driver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Instantiated class SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug2Driver not found\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Instantiated class Sweetchuck\\\\Robo\\\\PHPUnit\\\\PhpdbgDriver not found\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Method Sweetchuck\\\\Robo\\\\PHPUnit\\\\CoverageDriverFactory\\:\\:createInstance\\(\\) should return SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Driver\\|null but returns SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\PcovDriver\\|SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug2Driver\\|SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug3Driver\\|SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\XdebugDriver\\|Sweetchuck\\\\Robo\\\\PHPUnit\\\\PhpdbgDriver\\|null\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Method Sweetchuck\\\\Robo\\\\PHPUnit\\\\CoverageDriverFactory\\:\\:createInstancePhpdbg\\(\\) has invalid return type Sweetchuck\\\\Robo\\\\PHPUnit\\\\PhpdbgDriver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Method Sweetchuck\\\\Robo\\\\PHPUnit\\\\CoverageDriverFactory\\:\\:createInstanceXdebug\\(\\) has invalid return type SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug2Driver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Method Sweetchuck\\\\Robo\\\\PHPUnit\\\\CoverageDriverFactory\\:\\:createInstanceXdebug\\(\\) has invalid return type SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug3Driver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Method Sweetchuck\\\\Robo\\\\PHPUnit\\\\CoverageDriverFactory\\:\\:createInstanceXdebug3\\(\\) has invalid return type SebastianBergmann\\\\CodeCoverage\\\\Driver\\\\Xdebug3Driver\\.$#"
+			count: 1
+			path: ../src/CoverageDriverFactory.php
+
+		-
+			message: "#^Offset 'fromTestcase' on array\\{size\\: string, status\\: string\\} on left side of \\?\\? does not exist\\.$#"
+			count: 1
+			path: ../src/CoveragePhpMerger.php
+
+		-
+			message: "#^Parameter \\#1 \\$generator of class SebastianBergmann\\\\CodeCoverage\\\\Report\\\\Html\\\\Facade constructor expects string, int given\\.$#"
+			count: 1
+			path: ../src/Task/CoverageReportHtmlTask.php
+
+		-
+			message: "#^Parameter \\#2 \\$colors of class SebastianBergmann\\\\CodeCoverage\\\\Report\\\\Html\\\\Facade constructor expects SebastianBergmann\\\\CodeCoverage\\\\Report\\\\Html\\\\Colors\\|null, int given\\.$#"
+			count: 1
+			path: ../src/Task/CoverageReportHtmlTask.php
+
+		-
+			message: "#^Parameter \\#3 \\$thresholds of class SebastianBergmann\\\\CodeCoverage\\\\Report\\\\Html\\\\Facade constructor expects SebastianBergmann\\\\CodeCoverage\\\\Report\\\\Thresholds\\|null, string given\\.$#"
+			count: 1
+			path: ../src/Task/CoverageReportHtmlTask.php

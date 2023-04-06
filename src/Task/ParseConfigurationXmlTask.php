@@ -30,20 +30,15 @@ class ParseConfigurationXmlTask extends BaseTask
     /**
      * @param string|resource $value
      *   XML content, file name, stream resource.
-     *
-     * @return $this
      */
-    public function setXmlFile($value)
+    public function setXmlFile($value): static
     {
         $this->xmlFile = $value;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -56,7 +51,7 @@ class ParseConfigurationXmlTask extends BaseTask
         return $this;
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $xmlString = $this->getXmlString();
         if (!$xmlString) {
@@ -83,10 +78,7 @@ class ParseConfigurationXmlTask extends BaseTask
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         // Assets are already populated in the $this->runDoIt().
         return $this;

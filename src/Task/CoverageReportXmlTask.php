@@ -24,10 +24,7 @@ class CoverageReportXmlTask extends BaseTask
 
     protected ?CodeCoverage $coverage = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -58,7 +55,7 @@ class CoverageReportXmlTask extends BaseTask
         return new CloverReporter();
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $reporter = $this->getReporterFallback();
         $this->assets['phpunit.coverage_merged.xml'] = $reporter->process($this->getCoverage(), $this->getDstFile());

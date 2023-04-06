@@ -1,0 +1,15 @@
+{
+    "description": "Use phpunit/phpunit:^10",
+    "actions": [
+        {
+            "type": "replaceRecursive",
+            "config": {
+                "parents": ["require"],
+                "items": {
+                    "phpunit/php-code-coverage": "^10.0",
+                    "phpunit/phpunit": "^10.0"
+                }
+            }
+        }
+    ]
+}

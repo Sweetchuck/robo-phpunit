@@ -5,6 +5,8 @@
 /tests/_support/_generated/
 /tests/*.suite.yml
 /codeception.yml
+/tests/_data/fixtures/project-01/.phpunit.cache/
+/tests/_data/fixtures/project-01/.phpunit.result.cache
 
 /.git-hooks.local
 
@@ -14,3 +16,8 @@
 
 /robo.yml
 /RoboFileLocal.php
+
+/composer.phpunit09.json
+/composer.phpunit09.lock
+/composer.phpunit10.json
+/composer.phpunit10.lock

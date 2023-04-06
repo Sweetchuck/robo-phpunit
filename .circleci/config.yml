@@ -182,6 +182,10 @@ commands:
 
     composer_install:
         description: 'Install Composer dependencies with cache restore and save'
+        parameters:
+            composer_suite:
+                type: 'string'
+                default: ''
         steps:
             -
                 restore_cache:
@@ -192,9 +196,23 @@ commands:
             -
                 run:
                     name: 'Composer - install'
-                    command: >
+                    command: |
                         composer install --no-progress
+                        exitCode=$?
 
+                        suiteName='<<parameters.composer_suite>>'
+                        if [[ "${suiteName}" = '' ]] ; then
+                            exit $exitCode
+                        fi
+
+                        composer suite:generate -vv
+                        cp composer.lock "composer.${suiteName}.lock"
+                        export COMPOSER="composer.${suiteName}.json"
+                        composer \
+                            update \
+                            --no-progress \
+                            --with-all-dependencies \
+                            $(composer suite:changed-packages:list)
             -
                 save_cache:
                     name: 'Composer - cache save'
@@ -258,12 +276,16 @@ jobs:
         parameters:
             executor:
                 type: 'string'
+            composer_suite:
+                type: 'string'
         executor: '<<parameters.executor>>'
         steps:
             - 'php_extension_install_pcov'
             - 'php_extension_install_xdebug'
             - 'checkout'
-            - 'composer_install'
+            -
+                composer_install:
+                    composer_suite: '<<parameters.composer_suite>>'
             - 'test'
 
 workflows:
@@ -284,3 +306,6 @@ workflows:
                             executor:
                                 - 'php_min'
                                 - 'php_plus1'
+                            composer_suite:
+                                - 'phpunit09'
+                                - 'phpunit10'
