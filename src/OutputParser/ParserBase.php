@@ -22,7 +22,7 @@ abstract class ParserBase implements OutputParserInterface
     /**
      * {@inheritdoc}
      */
-    public function setAssetNameMapping(array $value)
+    public function setAssetNameMapping(array $value): static
     {
         $this->assetNameMapping = $value;
 

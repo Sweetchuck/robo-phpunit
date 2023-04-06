@@ -16,10 +16,7 @@ class ListGroupsTask extends BaseCliTask
         'items' => 'phpunit.groupNames',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -32,7 +29,7 @@ class ListGroupsTask extends BaseCliTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         parent::runInitAssets();
         $this->assets['phpunit.groupNames'] = null;

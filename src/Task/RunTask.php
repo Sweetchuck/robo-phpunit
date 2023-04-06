@@ -120,10 +120,7 @@ class RunTask extends BaseCliTask
 
     protected array $outputParserAssetNameMapping = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         $w = 0;
         parent::initOptions();

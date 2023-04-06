@@ -6,7 +6,7 @@ namespace Sweetchuck\Robo\PHPUnit;
 
 use SebastianBergmann\CodeCoverage\Driver\Driver as CoverageDriver;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
-use SebastianBergmann\CodeCoverage\Driver\PhpdbgDriver;
+use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug2Driver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
 use SebastianBergmann\CodeCoverage\Filter;
@@ -37,10 +37,8 @@ class CoverageDriverFactory
 
     /**
      * @param int[] $precedenceList
-     *
-     * @return $this
      */
-    public function setPrecedenceList(array $precedenceList)
+    public function setPrecedenceList(array $precedenceList): static
     {
         asort($precedenceList);
         $this->precedenceList = $precedenceList;
@@ -86,7 +84,7 @@ class CoverageDriverFactory
     }
 
     /**
-     * @return null|\SebastianBergmann\CodeCoverage\Driver\Xdebug2Driver|\SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver
+     * @return null|\SebastianBergmann\CodeCoverage\Driver\Xdebug2Driver|\SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver|\SebastianBergmann\CodeCoverage\Driver\XdebugDriver
      */
     public function createInstanceXdebug(Filter $filter)
     {
@@ -96,12 +94,23 @@ class CoverageDriverFactory
 
         $xdebugVersion = phpversion('xdebug') ?: '3.0.0';
         $driver = version_compare($xdebugVersion, '3', '>=') ?
-            new Xdebug3Driver($filter)
+            $this->createInstanceXdebug3($filter)
             : new Xdebug2Driver($filter);
 
         $driver->enableDeadCodeDetection();
 
         return $driver;
+    }
+
+    /**
+     * @return \SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver|\SebastianBergmann\CodeCoverage\Driver\XdebugDriver
+     */
+    protected function createInstanceXdebug3(Filter $filter)
+    {
+        // PHPUnit 9.x vs 10.x.
+        return class_exists(Xdebug3Driver::class) ?
+            new Xdebug3Driver($filter)
+            : new XdebugDriver($filter);
     }
 
     public function createInstancePhpdbg(): ?PhpdbgDriver

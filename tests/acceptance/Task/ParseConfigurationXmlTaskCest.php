@@ -12,7 +12,8 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask<extended>
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
  * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
  */
 class ParseConfigurationXmlTaskCest

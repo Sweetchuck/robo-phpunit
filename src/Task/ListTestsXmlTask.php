@@ -32,10 +32,7 @@ class ListTestsXmlTask extends BaseCliTask
         'xml' => 'phpunit.tests.xml',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -49,7 +46,7 @@ class ListTestsXmlTask extends BaseCliTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         parent::runInitAssets();
         $this->assets['phpunit.tests.xml'] = null;

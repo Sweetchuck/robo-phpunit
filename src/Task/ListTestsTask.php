@@ -32,10 +32,7 @@ class ListTestsTask extends BaseCliTask
         'items' => 'phpunit.testMethods',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -49,7 +46,7 @@ class ListTestsTask extends BaseCliTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         parent::runInitAssets();
         $this->assets['phpunit.testMethods'] = null;

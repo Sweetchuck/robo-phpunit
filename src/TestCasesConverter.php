@@ -214,10 +214,8 @@ class TestCasesConverter
 
     /**
      * @param iterable<string> $files
-     *
-     * @return $this
      */
-    protected function requireFiles(iterable $files)
+    protected function requireFiles(iterable $files): static
     {
         foreach ($files as $file) {
             require_once $file;

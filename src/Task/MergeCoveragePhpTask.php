@@ -26,10 +26,7 @@ class MergeCoveragePhpTask extends BaseTask
 
     protected ?CodeCoverage $coverage = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -65,7 +62,7 @@ class MergeCoveragePhpTask extends BaseTask
         return $this->getWriter() ?: new NullOutput();
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $files = $this->getFilesFallback();
         $merger = $this->getMergerFallback();
@@ -76,12 +73,12 @@ class MergeCoveragePhpTask extends BaseTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         return $this;
     }
 
-    protected function runProcessOutputs()
+    protected function runProcessOutputs(): static
     {
         return $this;
     }

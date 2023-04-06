@@ -31,10 +31,7 @@ class TestCasesToCsvTask extends BaseTask
 {
     protected string $taskName = 'PHPUnit - Test cases to CSV';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -67,7 +64,7 @@ class TestCasesToCsvTask extends BaseTask
         return $this;
     }
 
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $xmlString = Utils::getXmlString(
             $this->getXmlFile(),
@@ -88,12 +85,12 @@ class TestCasesToCsvTask extends BaseTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         return $this;
     }
 
-    protected function runProcessOutputs()
+    protected function runProcessOutputs(): static
     {
         return $this;
     }

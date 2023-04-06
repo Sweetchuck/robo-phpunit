@@ -11,7 +11,9 @@ use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
 use Symfony\Component\Finder\Finder;
 
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask<extended>
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
+ * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
  * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
  */
 class ListGroupsTaskCest

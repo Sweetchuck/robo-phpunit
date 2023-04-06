@@ -16,10 +16,7 @@ class ListSuitesTask extends BaseCliTask
         'items' => 'phpunit.suitNames',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -32,7 +29,7 @@ class ListSuitesTask extends BaseCliTask
         return $this;
     }
 
-    protected function runInitAssets()
+    protected function runInitAssets(): static
     {
         parent::runInitAssets();
         $this->assets['phpunit.suitNames'] = null;

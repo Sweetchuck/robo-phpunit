@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit;
 
+use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
 use Symfony\Component\Filesystem\Path;
 
 class Utils
@@ -23,8 +24,6 @@ class Utils
 
     /**
      * @param string|resource $xmlFile
-     *
-     * @return null|string
      */
     public static function getXmlString(
         $xmlFile,
@@ -89,5 +88,10 @@ class Utils
         $str = mb_strtolower($str);
 
         return (string) mb_ereg_replace('[-_\s]+', $delimiter, $str);
+    }
+
+    public static function phpunitVersionMajor(): int
+    {
+        return class_exists(Xdebug3Driver::class) ? 9 : 10;
     }
 }

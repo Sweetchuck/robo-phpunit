@@ -49,7 +49,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     protected ?\Closure $processRunCallbackWrapper = null;
 
-    protected function initOptions()
+    protected function initOptions(): static
     {
         parent::initOptions();
         $this->options += [
@@ -141,20 +141,15 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     /**
      * @param array<string, string> $envVars
-     *
-     * @return $this
      */
-    public function setEnvVars(array $envVars)
+    public function setEnvVars(array $envVars): static
     {
         $this->options['envVars']['value'] = $envVars;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addEnvVar(string $name, string $value)
+    public function addEnvVar(string $name, string $value): static
     {
         $this->options['envVars']['value'][$name] = $value;
 
@@ -163,10 +158,8 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     /**
      * @param array<string, string> $envVars
-     *
-     * @return $this
      */
-    public function addEnvVars(array $envVars)
+    public function addEnvVars(array $envVars): static
     {
         foreach ($envVars as $name => $value) {
             $this->addEnvVar($name, $value);
@@ -175,10 +168,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function removeEnvVar(string $name)
+    public function removeEnvVar(string $name): static
     {
         unset($this->options['envVars']['value'][$name]);
 
@@ -187,10 +177,8 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
 
     /**
      * @param array<string> $names
-     *
-     * @return $this
      */
-    public function removeEnvVars(array $names)
+    public function removeEnvVars(array $names): static
     {
         foreach ($names as $name) {
             $this->removeEnvVar($name);
@@ -199,20 +187,14 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addArgument(string $argument)
+    public function addArgument(string $argument): static
     {
         $this->options['arguments']['value'][$argument] = true;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function removeArgument(string $argument)
+    public function removeArgument(string $argument): static
     {
         unset($this->options['arguments']['value'][$argument]);
 
@@ -234,20 +216,14 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
             ->getCommandBuild();
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandInit()
+    protected function getCommandInit(): static
     {
         $this->cmdBuilder = new CommandBuilder();
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandEnvironmentVariables()
+    protected function getCommandEnvironmentVariables(): static
     {
         foreach ($this->options['envVars']['value'] as $name => $value) {
             $this->cmdBuilder->addEnvVar($name, $value);
@@ -256,10 +232,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandPhpExecutable()
+    protected function getCommandPhpExecutable(): static
     {
         if ($this->options['phpExecutable']['value']) {
             $this->cmdBuilder->setExecutable($this->options['phpExecutable']['value']);
@@ -268,10 +241,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandPhpunitExecutable()
+    protected function getCommandPhpunitExecutable(): static
     {
         if ($this->options['phpExecutable']['value']) {
             $this->cmdBuilder->addArgument($this->options['phpunitExecutable']['value']);
@@ -284,10 +254,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandPhpunitOptions()
+    protected function getCommandPhpunitOptions(): static
     {
         foreach ($this->options as $optionName => $option) {
             if (mb_strpos($option['type'], 'option:') !== 0) {
@@ -300,10 +267,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function getCommandPhpunitArguments()
+    protected function getCommandPhpunitArguments(): static
     {
         foreach (array_keys($this->options['arguments']['value'], true, true) as $argument) {
             $this->cmdBuilder->addArgument($argument, 'argument:single:unsafe');
@@ -325,10 +289,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $chdir . (string) $this->cmdBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function runInit()
+    protected function runInit(): static
     {
         $this->runInitProcessRunCallbackWrapper();
         $this->command = $this->getCommand();
@@ -336,10 +297,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function runInitProcessRunCallbackWrapper()
+    protected function runInitProcessRunCallbackWrapper(): static
     {
         $this->processRunCallbackWrapper = function (string $type, string $data): void {
             $this->processRunCallback($type, $data);
@@ -348,10 +306,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function runHeader()
+    protected function runHeader(): static
     {
         $this->printTaskInfo(
             'runs "<info>{command}</info>"',
@@ -363,10 +318,7 @@ abstract class BaseCliTask extends BaseTask implements CommandInterface, OutputA
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function runDoIt()
+    protected function runDoIt(): static
     {
         $processInner = Process::fromShellCommandline($this->command);
         $processInner->setTimeout($this->options['processTimeout']['value']);

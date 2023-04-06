@@ -6,11 +6,13 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
 use Codeception\Attribute\DataProvider;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
+use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Sweetchuck\Robo\PHPUnit\CoverageDriverFactory;
 use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
+use Sweetchuck\Robo\PHPUnit\Utils;
 
 /**
  * @covers \Sweetchuck\Robo\PHPUnit\CoverageDriverFactory
@@ -25,7 +27,7 @@ class CoverageDriverFactoryTest extends Unit
      */
     public function casesCreateInstance(): array
     {
-        return [
+        $cases = [
             'pcov' => [
                 PcovDriver::class,
                 [
@@ -34,21 +36,38 @@ class CoverageDriverFactoryTest extends Unit
                     'phpdbg' => 2,
                 ],
             ],
-            'xdebug3' => [
-                Xdebug3Driver::class,
-                [
-                    'pcov' => 1,
-                    'xdebug' => 0,
-                    'phpdbg' => 2,
-                ],
-            ],
         ];
+
+        switch (Utils::phpunitVersionMajor()) {
+            case 9:
+                $cases['xdebug-phpunit-09'] = [
+                    Xdebug3Driver::class,
+                    [
+                        'pcov' => 1,
+                        'xdebug' => 0,
+                        'phpdbg' => 2,
+                    ],
+                ];
+                break;
+
+            case 10:
+                $cases['xdebug-phpunit-10'] = [
+                    XdebugDriver::class,
+                    [
+                        'pcov' => 1,
+                        'xdebug' => 0,
+                        'phpdbg' => 2,
+                    ],
+                ];
+                break;
+        }
+
+
+        return $cases;
     }
 
     /**
      * @param array<string, int> $precedenceList
-     *
-     * @dataProvider casesCreateInstance
      */
     #[DataProvider('casesCreateInstance')]
     public function testCreateInstance(string $expected, array $precedenceList): void
