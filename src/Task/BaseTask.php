@@ -96,10 +96,16 @@ abstract class BaseTask extends RoboBaseTask implements ContainerAwareInterface
                 $this->options[$optionName]['cliName'] = Utils::delimit($optionName, '-');
             }
         }
-        uasort($this->options, new ArrayValueComparer([
-            'weight' => 500,
-            'name' => '',
-        ]));
+        $comparer = new ArrayValueComparer();
+        $comparer->setKeys([
+            'weight' => [
+                'default' => 500,
+            ],
+            'name' => [
+                'default' => '',
+            ],
+        ]);
+        uasort($this->options, $comparer);
 
         return $this;
     }
