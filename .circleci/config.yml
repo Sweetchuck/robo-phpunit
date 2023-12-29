@@ -29,17 +29,17 @@ executors:
                 name: 'main'
                 image: 'cimg/php:8.2'
 
-#    php_plus1:
-#        resource_class: 'small'
-#        environment:
-#            <<: *env_common
-#            <<: *env_xdebug
-#            <<: *env_composer
-#            APP_XDEBUG_VERSION: '3.2.0'
-#        docker:
-#            -
-#                name: 'main'
-#                image: 'cimg/php:8.3'
+    php_plus1:
+        resource_class: 'small'
+        environment:
+            <<: *env_common
+            <<: *env_xdebug
+            <<: *env_composer
+            APP_XDEBUG_VERSION: '3.3.1'
+        docker:
+            -
+                name: 'main'
+                image: 'cimg/php:8.3'
 
 commands:
     php_extension_pecl_install:
@@ -305,7 +305,7 @@ workflows:
                         parameters:
                             executor:
                                 - 'php_min'
-#                                - 'php_plus1'
+                                - 'php_plus1'
                             composer_suite:
                                 - 'phpunit09'
                                 - 'phpunit10'
