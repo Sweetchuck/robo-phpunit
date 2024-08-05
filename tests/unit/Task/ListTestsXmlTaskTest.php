@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
 use Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ListTestsXmlTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- */
+#[CoversClass(ListTestsXmlTask::class)]
+#[CoversClass(BaseCliTask::class)]
+#[CoversClass(BaseTask::class)]
 class ListTestsXmlTaskTest extends BaseCliTaskTestBase
 {
 
@@ -22,7 +23,7 @@ class ListTestsXmlTaskTest extends BaseCliTaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesGetCommand(): array
+    public static function casesGetCommand(): array
     {
         return [
             'basic' => [
@@ -35,7 +36,7 @@ class ListTestsXmlTaskTest extends BaseCliTaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesRunSuccess(): array
+    public static function casesRunSuccess(): array
     {
         $xml01 = [
             '<?xml version="1.0"?>',

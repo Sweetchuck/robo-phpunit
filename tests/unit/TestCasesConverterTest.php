@@ -5,19 +5,18 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
 use Codeception\Attribute\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sweetchuck\Robo\PHPUnit\TestCasesConverter;
 use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\TestCasesConverter
- */
+#[CoversClass(TestCasesConverter::class)]
 class TestCasesConverterTest extends Unit
 {
 
     protected UnitTester $tester;
 
-    protected function selfProjectRoot(): string
+    protected static function selfProjectRoot(): string
     {
         return dirname(__DIR__, 2);
     }
@@ -25,9 +24,9 @@ class TestCasesConverterTest extends Unit
     /**
      * @return array<string, dev-to-file-names-success-case-array>
      */
-    public function casesToFileNamesSuccess(): array
+    public static function casesToFileNamesSuccess(): array
     {
-        $selfProjectRoot = $this->selfProjectRoot();
+        $selfProjectRoot = static::selfProjectRoot();
 
         return [
             'real' => [
@@ -67,7 +66,7 @@ class TestCasesConverterTest extends Unit
     /**
      * @return array<string, dev-to-csv-test-case-array>
      */
-    public function casesToCsv(): array
+    public static function casesToCsv(): array
     {
         $xmlStringReal = implode("\n", [
             '<?xml version="1.0"?>',
@@ -87,8 +86,8 @@ class TestCasesConverterTest extends Unit
             'empty' => [
                 '',
                 [
-                    $this->getEmptyXml(),
-                    $this->selfProjectRoot(),
+                    static::getEmptyXml(),
+                    static::selfProjectRoot(),
                 ],
             ],
             'real' => [
@@ -104,7 +103,7 @@ class TestCasesConverterTest extends Unit
                 ]),
                 [
                     $xmlStringReal,
-                    $this->selfProjectRoot(),
+                    static::selfProjectRoot(),
                 ],
             ],
             'real, granularity:file' => [
@@ -118,7 +117,7 @@ class TestCasesConverterTest extends Unit
                 ]),
                 [
                     $xmlStringReal,
-                    $this->selfProjectRoot(),
+                    static::selfProjectRoot(),
                     [],
                     ['file' => true],
                 ],
@@ -136,7 +135,7 @@ class TestCasesConverterTest extends Unit
         $this->tester->assertSame($excepted, $converter->toCsv(...$args));
     }
 
-    protected function getEmptyXml(): string
+    protected static function getEmptyXml(): string
     {
         return "<?xml version=\"1.0\"?>\n<tests>\n</tests>\n";
     }

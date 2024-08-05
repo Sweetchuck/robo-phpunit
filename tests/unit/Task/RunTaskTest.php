@@ -4,16 +4,18 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sweetchuck\CliCmdBuilder\CommandBuilder;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
 use Sweetchuck\Robo\PHPUnit\Task\RunTask;
 
 /**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\RunTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- *
  * @method \Sweetchuck\Robo\PHPUnit\Task\RunTask createTask()
  */
+#[CoversClass(RunTask::class)]
+#[CoversClass(BaseCliTask::class)]
+#[CoversClass(BaseTask::class)]
 class RunTaskTest extends BaseCliTaskTestBase
 {
 
@@ -25,10 +27,10 @@ class RunTaskTest extends BaseCliTaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesGetCommand(): array
+    public static function casesGetCommand(): array
     {
         return [
-            'All-in-one' => $this->casesGetCommandBuild([
+            'All-in-one' => static::casesGetCommandBuild([
                 [
                     'expected' => "cd 'a/b' &&",
                     'options' => [
@@ -383,7 +385,7 @@ class RunTaskTest extends BaseCliTaskTestBase
                     ],
                 ],
             ]),
-            'phpExecutable - cmd-builder-01' => $this->casesGetCommandBuild([
+            'phpExecutable - cmd-builder-01' => static::casesGetCommandBuild([
                 [
                     'expected' => "A='b' C='d' my-php -d 'e=f' -d 'g=h' 'vendor/bin/phpunit'",
                     'options' => [
@@ -397,7 +399,7 @@ class RunTaskTest extends BaseCliTaskTestBase
                     ],
                 ],
             ]),
-            'phpunitExecutable - cmd-builder-01' => $this->casesGetCommandBuild([
+            'phpunitExecutable - cmd-builder-01' => static::casesGetCommandBuild([
                 [
                     'expected' => "A='b' C='d' my-phpunit",
                     'options' => [
@@ -418,7 +420,7 @@ class RunTaskTest extends BaseCliTaskTestBase
      *
      * @return array<int, mixed>
      */
-    protected function casesGetCommandBuild(array $values): array
+    public static function casesGetCommandBuild(array $values): array
     {
         $args = [[], []];
         foreach ($values as $value) {
@@ -433,7 +435,7 @@ class RunTaskTest extends BaseCliTaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesRunSuccess(): array
+    public static function casesRunSuccess(): array
     {
         return [
             'basic' => [

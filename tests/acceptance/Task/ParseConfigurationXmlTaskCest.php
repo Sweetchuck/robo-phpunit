@@ -6,16 +6,19 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Acceptance\Task;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
+use Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask;
 use Sweetchuck\Robo\PHPUnit\Test\AcceptanceTester;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
- */
+#[CoversClass(ParseConfigurationXmlTask::class)]
+#[CoversClass(BaseTask::class)]
+#[CoversClass(PHPUnitTaskLoader::class)]
 class ParseConfigurationXmlTaskCest
 {
 

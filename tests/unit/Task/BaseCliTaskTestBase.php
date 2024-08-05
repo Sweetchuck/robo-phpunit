@@ -19,7 +19,7 @@ abstract class BaseCliTaskTestBase extends TaskTestBase
     /**
      * @return array<string, mixed>
      */
-    abstract public function casesGetCommand(): array;
+    abstract public static function casesGetCommand(): array;
 
     /**
      * @param array<string, mixed> $options
@@ -36,7 +36,7 @@ abstract class BaseCliTaskTestBase extends TaskTestBase
     /**
      * @return array<string, mixed>
      */
-    abstract public function casesRunSuccess(): array;
+    abstract public static function casesRunSuccess(): array;
 
     /**
      * @param array<string, mixed> $expected

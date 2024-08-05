@@ -5,12 +5,12 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Codeception\Attribute\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
 use Sweetchuck\Robo\PHPUnit\Task\TestCasesToFileNamesTask;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\TestCasesToFileNamesTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- */
+#[CoversClass(TestCasesToFileNamesTask::class)]
+#[CoversClass(BaseTask::class)]
 class TestCasesToFileNamesTaskTest extends TaskTestBase
 {
     protected function createTaskInstance(): TestCasesToFileNamesTask
@@ -21,7 +21,7 @@ class TestCasesToFileNamesTaskTest extends TaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesRunSuccess(): array
+    public static function casesRunSuccess(): array
     {
         $xmlContent = implode("\n", [
             '<?xml version="1.0"?>',
@@ -51,7 +51,7 @@ class TestCasesToFileNamesTaskTest extends TaskTestBase
                 ],
                 [
                     'xmlFile' => $xmlContent,
-                    'fileNameRelativeTo' => $this->selfProjectRoot(),
+                    'fileNameRelativeTo' => static::selfProjectRoot(),
                 ],
             ],
         ];

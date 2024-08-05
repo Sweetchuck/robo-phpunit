@@ -6,12 +6,11 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Test\Unit;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
 use Sweetchuck\Robo\PHPUnit\Utils;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Utils
- */
+#[CoversClass(Utils::class)]
 class UtilsTest extends Unit
 {
 
@@ -20,7 +19,7 @@ class UtilsTest extends Unit
     /**
      * @return array<string, dev-delimit-test-case-array>
      */
-    public function casesDelimit(): array
+    public static function casesDelimit(): array
     {
         return [
             'empty' => [

@@ -35,7 +35,7 @@ abstract class TaskTestBase extends Unit
 
     protected DummyTaskBuilder $taskBuilder;
 
-    protected function selfProjectRoot(): string
+    protected static function selfProjectRoot(): string
     {
         return dirname(__DIR__, 3);
     }

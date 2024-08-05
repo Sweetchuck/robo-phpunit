@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
 use Codeception\Attribute\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
 use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
 use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
@@ -14,9 +15,7 @@ use Codeception\Test\Unit;
 use Sweetchuck\Robo\PHPUnit\Test\UnitTester;
 use Sweetchuck\Robo\PHPUnit\Utils;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\CoverageDriverFactory
- */
+#[CoversClass(CoverageDriverFactory::class)]
 class CoverageDriverFactoryTest extends Unit
 {
 
@@ -25,7 +24,7 @@ class CoverageDriverFactoryTest extends Unit
     /**
      * @return array<string, mixed>
      */
-    public function casesCreateInstance(): array
+    public static function casesCreateInstance(): array
     {
         $cases = [
             'pcov' => [

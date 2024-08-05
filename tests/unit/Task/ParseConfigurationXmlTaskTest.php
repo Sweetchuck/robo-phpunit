@@ -5,12 +5,12 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
 use Codeception\Attribute\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
 use Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ParseConfigurationXmlTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- */
+#[CoversClass(ParseConfigurationXmlTask::class)]
+#[CoversClass(BaseTask::class)]
 class ParseConfigurationXmlTaskTest extends TaskTestBase
 {
     protected function createTaskInstance(): ParseConfigurationXmlTask
@@ -21,7 +21,7 @@ class ParseConfigurationXmlTaskTest extends TaskTestBase
     /**
      * @return array<string, mixed>
      */
-    public function casesRunSuccess(): array
+    public static function casesRunSuccess(): array
     {
         $xmlContent = implode(PHP_EOL, [
             '<phpunit>',

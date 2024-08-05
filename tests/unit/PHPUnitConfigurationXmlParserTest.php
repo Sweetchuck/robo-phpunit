@@ -6,18 +6,17 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Unit;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Test\Unit;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitConfigurationXmlParser
- */
+#[CoversClass(PHPUnitConfigurationXmlParser::class)]
 class PHPUnitConfigurationXmlParserTest extends Unit
 {
 
     /**
      * @return array<string, mixed>
      */
-    public function casesParse(): array
+    public static function casesParse(): array
     {
         return [
             'phpunit-7' => [
@@ -91,6 +90,6 @@ class PHPUnitConfigurationXmlParserTest extends Unit
     public function testParse(array $expected, string $xmlString, string $baseDir = ''): void
     {
         $parser = new PHPUnitConfigurationXmlParser();
-        $this->assertEquals($expected, $parser->parse($xmlString, $baseDir));
+        $this->assertSame($expected, $parser->parse($xmlString, $baseDir));
     }
 }

@@ -5,18 +5,18 @@ declare(strict_types = 1);
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
 use Codeception\Attribute\DataProvider;
+use Codeception\Test\Unit;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser
- */
-class ListOutputParserTest extends \Codeception\Test\Unit
+#[CoversClass(ListOutputParser::class)]
+class ListOutputParserTest extends Unit
 {
 
     /**
      * @return array<string, mixed>
      */
-    public function casesParse(): array
+    public static function casesParse(): array
     {
         return [
             'error' => [

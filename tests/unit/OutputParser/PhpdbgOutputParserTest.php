@@ -6,18 +6,18 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Unit\OutputParser;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Test\Unit;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
 use Sweetchuck\Robo\PHPUnit\OutputParser\PhpdbgOutputParser;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser
- */
+#[CoversClass(ListOutputParser::class)]
 class PhpdbgOutputParserTest extends Unit
 {
 
     /**
      * @return array<string, mixed>
      */
-    public function casesParse(): array
+    public static function casesParse(): array
     {
         $color = "\x1b\[1;31m";
         $errorOpenPlain = '[Could not open file foo.php';

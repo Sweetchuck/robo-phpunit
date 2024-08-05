@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Test\Unit\Task;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
 use Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ListGroupsTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- */
+#[CoversClass(ListGroupsTask::class)]
+#[CoversClass(BaseCliTask::class)]
+#[CoversClass(BaseTask::class)]
 class ListGroupsTaskTest extends BaseCliTaskTestBase
 {
 
@@ -22,7 +23,7 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
     /**
      * {@inheritdoc}
      */
-    public function casesGetCommand(): array
+    public static function casesGetCommand(): array
     {
         return [
             'basic' => [
@@ -41,7 +42,7 @@ class ListGroupsTaskTest extends BaseCliTaskTestBase
     /**
      * {@inheritdoc}
      */
-    public function casesRunSuccess(): array
+    public static function casesRunSuccess(): array
     {
         return [
             'basic' => [

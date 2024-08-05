@@ -6,16 +6,19 @@ namespace Sweetchuck\Robo\PHPUnit\Test\Acceptance\Task;
 
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader;
+use Sweetchuck\Robo\PHPUnit\Task\BaseCliTask;
+use Sweetchuck\Robo\PHPUnit\Task\BaseTask;
+use Sweetchuck\Robo\PHPUnit\Task\ListTestsTask;
 use Sweetchuck\Robo\PHPUnit\Test\AcceptanceTester;
 use Sweetchuck\Robo\PHPUnit\Test\Helper\RoboFiles\PHPUnitRoboFile;
 use Symfony\Component\Finder\Finder;
 
-/**
- * @covers \Sweetchuck\Robo\PHPUnit\Task\ListTestsTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseCliTask
- * @covers \Sweetchuck\Robo\PHPUnit\Task\BaseTask
- * @covers \Sweetchuck\Robo\PHPUnit\PHPUnitTaskLoader
- */
+#[CoversClass(ListTestsTask::class)]
+#[CoversClass(BaseCliTask::class)]
+#[CoversClass(BaseTask::class)]
+#[CoversClass(PHPUnitTaskLoader::class)]
 class ListTestsTaskCest
 {
 
