@@ -72,6 +72,12 @@ class CoverageDriverFactoryTest extends Unit
     #[DataProvider('casesCreateInstance')]
     public function testCreateInstance(string $expected, array $precedenceList): void
     {
+        if (version_compare(\PHP_VERSION, '8.4.0', '>=')
+            && $expected === PcovDriver::class
+        ) {
+            $this->markTestSkipped("PCOV 1.0.11 2021-12-20 is not compatible with PHP 8.4.0+");
+        }
+
         $filter = new CodeCoverageFilter();
         $factory = new CoverageDriverFactory();
         $factory->setPrecedenceList($precedenceList);

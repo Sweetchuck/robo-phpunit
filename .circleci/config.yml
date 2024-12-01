@@ -41,6 +41,18 @@ executors:
                 name: 'main'
                 image: 'cimg/php:8.3'
 
+    php_plus2:
+        resource_class: 'small'
+        environment:
+            <<: *env_common
+            <<: *env_xdebug
+            <<: *env_composer
+            APP_XDEBUG_VERSION: '3.4.0'
+        docker:
+            -
+                name: 'main'
+                image: 'cimg/php:8.4'
+
 commands:
     php_extension_pecl_install:
         description: 'Install PHP extension with pecl'
@@ -148,32 +160,49 @@ commands:
                 type: 'string'
                 default: 'false'
         steps:
-            - run:
-                  name: 'Enable PHP extension – <<parameters.ext_name>>'
-                  command: |
-                      if php -m | grep '<<parameters.ext_name>>' ; then
-                          exit 0
-                      fi
+            -
+                run:
+                    name: 'Enable PHP extension – <<parameters.ext_name>>'
+                    command: |
+                        if php -m | grep '<<parameters.ext_name>>' ; then
+                            exit 0
+                        fi
 
-                      scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
+                        scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
 
-                      if [[ '<<parameters.is_zend>>' = 'true' ]] ; then
-                          content='zend_extension=<<parameters.ext_name>>'
-                      else
-                          content='extension=<<parameters.ext_name>>'
-                      fi
+                        if [[ '<<parameters.is_zend>>' = 'true' ]] ; then
+                            content='zend_extension=<<parameters.ext_name>>'
+                        else
+                            content='extension=<<parameters.ext_name>>'
+                        fi
 
-                      echo "${content}" | sudo tee --append "${scanDir}/<<parameters.ext_name>>.ini"
+                        echo "${content}" | sudo tee --append "${scanDir}/<<parameters.ext_name>>.ini"
 
     php_extension_install_pcov:
         description: 'Install PHP extension – pcov'
+        parameters:
+            executor:
+                description: 'Identifier of the executor'
+                type: 'string'
+                default: ''
         steps:
             -
-                php_extension_pecl_install:
-                    ext_name: 'pcov'
+                when:
+                    condition:
+                        not:
+                            equal: [ '<<parameters.executor>>', 'php_plus2' ]
+                    steps:
+                        -
+                            php_extension_pecl_install:
+                                ext_name: 'pcov'
 
     php_extension_install_xdebug:
         description: 'Install PHP extension – xdebug'
+        parameters:
+            executor:
+                description: 'Identifier of the executor'
+                type: 'string'
+                default: ''
         steps:
             -
                 php_extension_pecl_install:
@@ -280,8 +309,12 @@ jobs:
                 type: 'string'
         executor: '<<parameters.executor>>'
         steps:
-            - 'php_extension_install_pcov'
-            - 'php_extension_install_xdebug'
+            -
+                php_extension_install_pcov:
+                    executor: '<<parameters.executor>>'
+            -
+                php_extension_install_xdebug:
+                    executor: '<<parameters.executor>>'
             - 'checkout'
             -
                 composer_install:
@@ -306,6 +339,7 @@ workflows:
                             executor:
                                 - 'php_min'
                                 - 'php_plus1'
+                                - 'php_plus2'
                             composer_suite:
                                 - 'phpunit09'
                                 - 'phpunit10'
