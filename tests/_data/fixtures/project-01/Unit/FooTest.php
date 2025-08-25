@@ -20,7 +20,7 @@ class FooTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    public function casesDummy02(): array
+    public static function casesDummy02(): array
     {
         return [
             'a' => [true],
@@ -33,6 +33,6 @@ class FooTest extends TestCase
      */
     public function testDummy02(bool $expected): void
     {
-        $this->assertSame($expected, true);
+        static::assertSame($expected, true);
     }
 }

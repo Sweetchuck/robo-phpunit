@@ -76,20 +76,20 @@ class ListGroupsTaskCest
         $stdOutput = $tester->getRoboTaskStdOutput($example['id']);
         $stdError = $tester->getRoboTaskStdError($example['id']);
 
+        if (isset($example['expected']['stdOutput'])) {
+            $tester->assertSame($example['expected']['stdOutput'], $stdOutput, 'stdOutput');
+        }
+
+        if (isset($example['expected']['stdError'])) {
+            $tester->assertSame($example['expected']['stdError'], $stdError, 'stdError');
+        }
+
         if (isset($example['expected']['exitCode'])) {
             $tester->assertSame(
                 $example['expected']['exitCode'],
                 $exitCode,
                 "exitCode;\n---\n$stdOutput\n---\n$stdError",
             );
-        }
-
-        if (isset($example['expected']['stdOutput'])) {
-            $tester->assertStringContainsString($example['expected']['stdOutput'], $stdOutput, 'stdOutput');
-        }
-
-        if (isset($example['expected']['stdError'])) {
-            $tester->assertSame($example['expected']['stdError'], $stdError, 'stdError');
         }
     }
 }

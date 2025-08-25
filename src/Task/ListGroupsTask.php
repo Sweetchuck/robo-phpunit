@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\Robo\PHPUnit\Task;
 
-use Sweetchuck\Robo\PHPUnit\OutputParser\ListOutputParser;
+use Sweetchuck\Robo\PHPUnit\OutputParser\GroupsOutputParser;
 
 class ListGroupsTask extends BaseCliTask
 {
     protected string $taskName = 'PHPUnit - List groups';
 
-    protected ?string $outputParserClass = ListOutputParser::class;
+    protected ?string $outputParserClass = GroupsOutputParser::class;
 
     protected array $outputParserAssetNameMapping = [
         'items' => 'phpunit.groupNames',

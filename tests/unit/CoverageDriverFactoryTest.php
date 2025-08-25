@@ -8,7 +8,6 @@ use Codeception\Attribute\DataProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use SebastianBergmann\CodeCoverage\Driver\PcovDriver;
 use SebastianBergmann\CodeCoverage\Driver\XdebugDriver;
-use SebastianBergmann\CodeCoverage\Driver\Xdebug3Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Sweetchuck\Robo\PHPUnit\CoverageDriverFactory;
 use Codeception\Test\Unit;
@@ -38,19 +37,8 @@ class CoverageDriverFactoryTest extends Unit
         ];
 
         switch (Utils::phpunitVersionMajor()) {
-            case 9:
-                $cases['xdebug-phpunit-09'] = [
-                    Xdebug3Driver::class,
-                    [
-                        'pcov' => 1,
-                        'xdebug' => 0,
-                        'phpdbg' => 2,
-                    ],
-                ];
-                break;
-
-            case 10:
-                $cases['xdebug-phpunit-10'] = [
+            case 11:
+                $cases['xdebug-phpunit-11'] = [
                     XdebugDriver::class,
                     [
                         'pcov' => 1,
@@ -71,12 +59,6 @@ class CoverageDriverFactoryTest extends Unit
     #[DataProvider('casesCreateInstance')]
     public function testCreateInstance(string $expected, array $precedenceList): void
     {
-        if (version_compare(\PHP_VERSION, '8.4.0', '>=')
-            && $expected === PcovDriver::class
-        ) {
-            $this->markTestSkipped("PCOV 1.0.11 2021-12-20 is not compatible with PHP 8.4.0+");
-        }
-
         $filter = new CodeCoverageFilter();
         $factory = new CoverageDriverFactory();
         $factory->setPrecedenceList($precedenceList);

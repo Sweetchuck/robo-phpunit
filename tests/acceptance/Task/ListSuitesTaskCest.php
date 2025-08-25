@@ -45,8 +45,8 @@ class ListSuitesTaskCest
                     'exitCode' => 0,
                     'stdOutput' => implode("\n", [
                         'phpunit.suitNames:',
-                        '    - Unit',
                         '    - Kernel',
+                        '    - Unit',
                         '',
                     ]),
                 ],
