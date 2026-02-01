@@ -201,11 +201,6 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         return getenv($this->getEnvVarName('php_executable')) ?: PHP_BINARY;
     }
 
-    protected function getPhpdbgExecutable(): string
-    {
-        return getenv($this->getEnvVarName('phpdbg_executable')) ?: Path::join(PHP_BINDIR, 'phpdbg');
-    }
-
     protected function initShell()
     {
         $this->shell = getenv('SHELL');
@@ -293,13 +288,8 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         $logDir = $this->getLogDir();
 
         $cmdArgs = [];
-        if ($this->isPhpDbgAvailable()) {
-            $cmdPattern = '%s -qrr';
-            $cmdArgs[] = escapeshellcmd($this->getPhpdbgExecutable());
-        } else {
-            $cmdPattern = '%s';
-            $cmdArgs[] = escapeshellcmd($this->getPhpExecutable());
-        }
+        $cmdPattern = '%s';
+        $cmdArgs[] = escapeshellcmd($this->getPhpExecutable());
 
         $cmdPattern .= ' %s';
         $cmdArgs[] = escapeshellcmd("{$this->binDir}/codecept");
@@ -452,13 +442,6 @@ class RoboFile extends Tasks implements ConfigAwareInterface
         }
 
         return in_array($extension, explode("\n", $process->getOutput()));
-    }
-
-    protected function isPhpDbgAvailable(): bool
-    {
-        $command = sprintf('%s -qrr', escapeshellcmd($this->getPhpdbgExecutable()));
-
-        return (new Process([$this->shell, '-c', $command]))->run() === 0;
     }
 
     protected function getLogDir(): string
